@@ -1,0 +1,29 @@
+{
+  "name": "rn-secure-storage",
+  "version": "1.0.2",
+  "description": "Secure Storage for React Native (Android & iOS)",
+  "main": "index.js",
+  "keywords": [
+    "react-native",
+    "ios",
+    "android",
+    "KeyChain service",
+    "KeyStore service",
+    "Device Security",
+    "keystore",
+    "keychain",
+    "secure-preferences",
+    "token",
+    "react-token"
+  ],
+  "author": "Talut Tasgiran",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talut/react-native-secure-storage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/talut/react-native-secure-storage/issues"
+  },
+  "homepage": "https://github.com/talut/react-native-secure-storage#readme"
+}
