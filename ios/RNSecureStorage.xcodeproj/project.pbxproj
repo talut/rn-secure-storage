@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3E7B58A1CC2AC0600A0062D /* RNRnSecureStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNRnSecureStorage.m */; };
+		B3E7B58A1CC2AC0600A0062D /* RNSecureStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSecureStorage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,11 +23,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		040E7432214FFB08000CB1EF /* Valet */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Valet; sourceTree = "<group>"; };
-		040E7433214FFB08000CB1EF /* Other */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Other; sourceTree = "<group>"; };
-		134814201AA4EA6300B7C361 /* libRNRnSecureStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNRnSecureStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5881CC2AC0600A0062D /* RNRnSecureStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNRnSecureStorage.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* RNRnSecureStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNRnSecureStorage.m; sourceTree = "<group>"; };
+		134814201AA4EA6300B7C361 /* libRNSecureStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSecureStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3E7B5881CC2AC0600A0062D /* RNSecureStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSecureStorage.h; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* RNSecureStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSecureStorage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +42,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libRNRnSecureStorage.a */,
+				134814201AA4EA6300B7C361 /* libRNSecureStorage.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -52,10 +50,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				040E7433214FFB08000CB1EF /* Other */,
-				040E7432214FFB08000CB1EF /* Valet */,
-				B3E7B5881CC2AC0600A0062D /* RNRnSecureStorage.h */,
-				B3E7B5891CC2AC0600A0062D /* RNRnSecureStorage.m */,
+				B3E7B5881CC2AC0600A0062D /* RNSecureStorage.h */,
+				B3E7B5891CC2AC0600A0062D /* RNSecureStorage.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,9 +59,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* RNRnSecureStorage */ = {
+		58B511DA1A9E6C8500147676 /* RNSecureStorage */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNRnSecureStorage" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSecureStorage" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -75,9 +71,9 @@
 			);
 			dependencies = (
 			);
-			name = RNRnSecureStorage;
+			name = RNSecureStorage;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libRNRnSecureStorage.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libRNSecureStorage.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -94,7 +90,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNRnSecureStorage" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSecureStorage" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -106,7 +102,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* RNRnSecureStorage */,
+				58B511DA1A9E6C8500147676 /* RNSecureStorage */,
 			);
 		};
 /* End PBXProject section */
@@ -116,7 +112,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* RNRnSecureStorage.m in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* RNSecureStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,7 +211,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNRnSecureStorage;
+				PRODUCT_NAME = RNSecureStorage;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -231,7 +227,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNRnSecureStorage;
+				PRODUCT_NAME = RNSecureStorage;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -239,7 +235,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNRnSecureStorage" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSecureStorage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -248,7 +244,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNRnSecureStorage" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSecureStorage" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,

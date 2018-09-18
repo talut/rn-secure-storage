@@ -3,7 +3,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:RNRnSecureStorage.xcodeproj">
+      location = "group:RNSecureStorage.xcodeproj">
    </FileRef>
 </Workspace>
   

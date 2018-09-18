@@ -1,29 +1,16 @@
+import { NativeModules } from 'react-native';
 
-import {Platform, NativeModules } from 'react-native';
+const { RNSecureStorage } = NativeModules;
 
-const { RNRnSecureStorage } = NativeModules;
-const isIOS = Platform.OS === "ios";
-
-export const set = (key, value) => {
-  if (isIOS) {
-    return RNRnSecureStorage.set(key, value)
-  } else {
-    return RNRnSecureStorage.set(key, value);
-  }
+export const ACCESSIBLE = {
+  WHEN_UNLOCKED: 'AccessibleWhenUnlocked',
+  AFTER_FIRST_UNLOCK: 'AccessibleAfterFirstUnlock',
+  ALWAYS: 'AccessibleAlways',
+  WHEN_PASSCODE_SET_THIS_DEVICE_ONLY: 'AccessibleWhenPasscodeSetThisDeviceOnly',
+  WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'AccessibleWhenUnlockedThisDeviceOnly',
+  AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY:
+      'AccessibleAfterFirstUnlockThisDeviceOnly',
+  ALWAYS_THIS_DEVICE_ONLY: 'AccessibleAlwaysThisDeviceOnly',
 };
 
-export const get = (key) => {
-  if (isIOS) {
-    return RNRnSecureStorage.get(key)
-  } else {
-    return RNRnSecureStorage.get(key);
-  }
-};
-
-export const clear = (key) => {
-  if (isIOS) {
-    return RNRnSecureStorage.clearWithKey(key);
-  } else {
-    return RNRnSecureStorage.clearWithKey(key);
-  }
-};
+export default RNSecureStorage;
