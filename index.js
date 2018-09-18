@@ -1,7 +1,4 @@
 import { NativeModules } from 'react-native';
-
-const { RNSecureStorage } = NativeModules;
-
 export const ACCESSIBLE = {
   WHEN_UNLOCKED: 'AccessibleWhenUnlocked',
   AFTER_FIRST_UNLOCK: 'AccessibleAfterFirstUnlock',
@@ -12,5 +9,6 @@ export const ACCESSIBLE = {
       'AccessibleAfterFirstUnlockThisDeviceOnly',
   ALWAYS_THIS_DEVICE_ONLY: 'AccessibleAlwaysThisDeviceOnly',
 };
+const { RNSecureStorage } = NativeModules;
 
 export default RNSecureStorage;
