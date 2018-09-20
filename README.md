@@ -100,7 +100,7 @@ console.log(err)
 
 ## Thanks
 
-- **[Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)**
+-  [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
 
 ## License
 
