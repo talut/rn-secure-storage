@@ -28,5 +28,11 @@ yarn add rn-secure-storage
 ```
 react-native link rn-secure-storage
 ```
+## Usage
 
+```javascript
+
+import RNSecureStorage from 'rn-secure-storage'
+
+```
 
