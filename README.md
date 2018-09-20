@@ -108,6 +108,7 @@ console.log(err)
 - *You can use that package but you can't get any good solution with lowest API of Android. Also that package is setted minSDK:18.  Thats means you will occur some problems.. *
 -**Hey can I trust you code/package?**
 -*You can see of my code in repo so you can review my code. Also if you want you can easily can fork my repo and changes what bothers you. This package is under MIT license. So I can't give you any warranty.  **But you should know, I'm using this package in my projects.** *
+
 -**Will you maintain this package?**
 -*Yeah I will planning this. But you know time can change everything.*
 -**Can I buy you a cup of coffee?**
