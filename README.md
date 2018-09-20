@@ -16,21 +16,27 @@ Above API 23 RNSecureStorage is using [Android Keystore](https://developer.andro
 
 ## Getting Started
 
-*With NPM*
+**With NPM**
 ```
 npm install --save rn-secure-storage
 ```
 
-*With YARN*
+**With YARN**
 ```
 yarn add rn-secure-storage
 ```
 
-`Automatic linking`
+**Automatic linking**
 
 ```
 react-native link rn-secure-storage
 ```
+
+**Manual Linking**
+
+**[Manual Installation](/docs/manual-installation.md)** (If something went wrong with react-native link)
+
+
 ## Usage
 
 ```javascript
