@@ -4,7 +4,7 @@ Secure Storage for React Native (Android & iOS)
 
 *Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), with RNSecureStorage now under api 23 is supporting too.*
 
-[Go to F.A.Q](#faq)
+**[Go to F.A.Q](#faq)**
 
 ### IOS
 
@@ -101,6 +101,10 @@ console.log(err)
 |**`ALWAYS_THIS_DEVICE_ONLY`**|The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.|
 
 ### F.A.Q
+
+- **Why should I use this package?**
+- *Yes you can use other packages like react-native-keychain I know that package has more options. But you can store only username, password but you can store a lot of [key,value] with RNSecureStorage*
+
 
 ## Thanks
 
