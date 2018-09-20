@@ -61,7 +61,12 @@ console.log(err);
 
 *Example Success Response for Set*
 ```javascript
-{"message":"Key stored successfuly", "status":1} You can use this response with JSON.parse()
+{"status":true/1} You can use this response with JSON.parse()
+```
+
+*Example Fail for Set*
+```javascript
+{"status":false/1} You can use this response with JSON.parse()
 ```
 
 **GET**
