@@ -3,10 +3,13 @@
 Secure Storage for React Native (Android & iOS)
 
 #### iOS
+
 RNSecureStorage is using Keychain for secure storaging.
 
 #### Android
-Under API 23 RNSecureStorage is using [https://github.com/scottyab/secure-preferences/](secure-prefences) by [@scottyab](https://github.com/scottyab)
+
+Under API 23 RNSecureStorage is using [secure-preferences](https://github.com/scottyab/secure-preferences/) by [@scottyab](https://github.com/scottyab)
+Above API 23 RNSecureStorage is using [Android Keystore](https://developer.android.com/training/articles/keystore)
 
 ## Getting Started
 
