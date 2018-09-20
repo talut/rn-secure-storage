@@ -39,9 +39,48 @@ react-native link rn-secure-storage
 
 ## Usage
 
+
 ```javascript
 
 import RNSecureStorage from 'rn-secure-storage'
 
 ```
+
+**SET**
+```javascript
+// {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This for IOS
+RNSecureStorage.set("key1", "this is a value", {accessible: ACCESSIBLE.WHEN_UNLOCKED})
+.then((res) => {
+console.log(res);
+}, (err) => {
+console.log(err);
+});
+```
+
+*Example Success Response for Set*
+```javascript
+{"message":"Key stored successfuly", "status":1} You can use this response with JSON.parse()
+```
+
+**GET**
+```javascript
+RNSecureStorage.get("key1").then((value) => {
+console.log(value) // Will return direct value
+}).catch((err) => {
+console.log(err)
+})
+```
+
+**REMOVE**
+```javascript
+RNSecureStorage.remove("key1").then((val) => {
+console.log(val)
+}).catch((err) => {
+console.log(err)
+});
+```
+
+
+
+
 
