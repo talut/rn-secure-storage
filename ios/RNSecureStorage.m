@@ -128,19 +128,19 @@ RCT_EXPORT_METHOD(set: (NSString *)key value:(NSString *)value
         [self handleAppUninstallation];
         BOOL status = [self createKeychainValue: value forIdentifier: key options: options];
         if (status) {
-            resolve([NSString stringWithFormat:@"{\"message\":\"Key stored successfully\", \"status\":%d}", true]);
+            resolve([NSString stringWithFormat:@"{\"status\":%d}", true]);
         } else {
             BOOL status = [self updateKeychainValue: value forIdentifier: key options: options];
             if (status) {
-                resolve([NSString stringWithFormat:@"{\"message\":\"Key updated successfully\", \"status\":%d}", true]);
+                resolve([NSString stringWithFormat:@"{\"status\":%d}", true]);
             } else {
-                NSString* errorMessage = [NSString stringWithFormat:@"{\"message\":\"An error occurred\", \"status\":%d}", false];
+                NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
                 reject(@"9", errorMessage, secureKeyStoreError(errorMessage));
             }
         }
     }
     @catch (NSException *exception) {
-        NSString* errorMessage = [NSString stringWithFormat:@"{\"message\":\"An error occurred\", \"status\":%d}", false];
+        NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
         reject(@"9", errorMessage, secureKeyStoreError(errorMessage));
     }
 }
@@ -153,14 +153,14 @@ RCT_EXPORT_METHOD(get:(NSString *)key
         [self handleAppUninstallation];
         NSString *value = [self searchKeychainCopyMatching:key];
         if (value == nil) {
-            NSString* errorMessage = [NSString stringWithFormat:@"{\"message\":\"key does not present\", \"status\":%d}", false];
+            NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
             reject(@"404", errorMessage, secureKeyStoreError(errorMessage));
         } else {
             resolve(value);
         }
     }
     @catch (NSException *exception) {
-        NSString* errorMessage = [NSString stringWithFormat:@"{\"message\":\"key does not present\", \"status\":%d}", false];
+        NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
         reject(@"1", errorMessage, secureKeyStoreError(errorMessage));
     }
 }
@@ -172,14 +172,14 @@ RCT_EXPORT_METHOD(remove:(NSString *)key
     @try {
         BOOL status = [self deleteKeychainValue:key];
         if (status) {
-            resolve([NSString stringWithFormat:@"{\"message\":\"key removed successfully\", \"status\":%d}", true]);
+            resolve([NSString stringWithFormat:@"{\"status\":%d}", true]);
         } else {
-            NSString* errorMessage = [NSString stringWithFormat:@"{\"message\":\"An error occurred when key removed.\", \"status\":%d}", false];
+            NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
             reject(@"6", errorMessage, secureKeyStoreError(errorMessage));
         }
     }
     @catch(NSException *exception) {
-        NSString* errorMessage =[NSString stringWithFormat:@"{\"message\":\"An error occurred when key removed.\", \"status\":%d}", false];
+        NSString* errorMessage =[NSString stringWithFormat:@"{\"status\":%d}", false];
         reject(@"6", errorMessage, secureKeyStoreError(errorMessage));
     }
 }

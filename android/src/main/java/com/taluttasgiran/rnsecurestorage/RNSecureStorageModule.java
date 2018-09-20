@@ -31,18 +31,24 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void set(String key, String value) {
+    public void set(String key, String value, Promise promise) {
         if (useKeystore()) {
             try {
                 rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
+                promise.resolve("{\"status\":" + true + "}")
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(Constants.TAG, "Exception: " + e.getMessage());
+                promise.reject("{\"status\":" + false + "}")
             }
         } else {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(key, value);
-            editor.apply();
+            try {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(key, value);
+                editor.apply();
+                promise.resolve("{\"status\":" + true + "}")
+            } catch (Exception e) {
+                promise.reject("{\"status\":" + false + "}")
+            }
         }
     }
 
@@ -53,31 +59,41 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 promise.resolve(rnKeyStore.getPlainText(getReactApplicationContext(), key));
             } catch (FileNotFoundException fnfe) {
                 fnfe.printStackTrace();
-                promise.reject("error", "{\"notFound\":" + true + "}");
+                promise.reject("{\"status\":" + false + "}")
             } catch (Exception e) {
                 e.printStackTrace();
-                promise.reject("error", "{\"notFound\":" + true + "}");
+                promise.reject("{\"status\":" + false + "}")
             }
         } else {
             try {
                 promise.resolve(prefs.getString(key, null));
             } catch (IllegalViewOperationException e) {
-                promise.reject("error", "{\"notFound\":" + true + "}");
+                promise.reject("{\"status\":" + false + "}")
             }
         }
     }
 
 
     @ReactMethod
-    public void clear(String key) {
+    public void clear(String key, Promise promise) {
         if (useKeystore()) {
-            Storage.resetValues(getReactApplicationContext(), new String[]{
-                    Constants.SKS_DATA_FILENAME + key,
-                    Constants.SKS_KEY_FILENAME + key,
-            });
+            try {
+                Storage.resetValues(getReactApplicationContext(), new String[]{
+                        Constants.SKS_DATA_FILENAME + key,
+                        Constants.SKS_KEY_FILENAME + key,
+                });
+                promise.resolve("{\"status\":" + true + "}")
+            } catch (Exception e) {
+                promise.reject("{\"status\":" + false + "}")
+            }
         } else {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.remove(key).apply();
+            try {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.remove(key).apply();
+                promise.resolve("{\"status\":" + true + "}")
+            } catch () {
+                promise.reject("{\"status\":" + false + "}")
+            }
         }
     }
 
