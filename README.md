@@ -96,6 +96,22 @@ console.log(err)
 |**`ALWAYS_THIS_DEVICE_ONLY`**|The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.|
 
 
+### Example
+
+You can find the usage example of package in example folder. 
+
+```javascript
+
+$ git clone https://github.com/talut/rn-secure-package
+
+$ cd rn-secure-package/example
+
+$ npm install
+
+$ react-native run-ios/android
+
+```
+
 ### Version 1.0.7
 - Android & IOS returing value/messages are updated.
 - [Issue:1](https://github.com/talut/rn-secure-storage/issues/1) is solved.
