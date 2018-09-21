@@ -59,16 +59,6 @@ console.log(err);
 });
 ```
 
-*Example Success Response for Set*
-```javascript
-{"status":true/1} 
-```
-
-*Example Fail for Set*
-```javascript
-{"status":false/0} 
-```
-
 **GET**
 ```javascript
 RNSecureStorage.get("key1").then((value) => {
