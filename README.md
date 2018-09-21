@@ -52,8 +52,8 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
 ```javascript
 // {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This for IOS
 RNSecureStorage.set("key1", "this is a value", {accessible: ACCESSIBLE.WHEN_UNLOCKED})
-.then((res) => {
-console.log(res);
+.then(() => {
+console.log("Value stored");
 }, (err) => {
 console.log(err);
 });
