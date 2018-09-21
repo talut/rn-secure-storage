@@ -100,7 +100,7 @@ console.log(err)
 
 You can find the usage example of package in example folder. 
 
-```javascript
+```console
 
 $ git clone https://github.com/talut/rn-secure-package
 
