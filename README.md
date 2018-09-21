@@ -2,7 +2,7 @@
 
 Secure Storage for React Native (Android & iOS) 
 
-*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), with RNSecureStorage now under api 23 is supporting too.*
+*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*
 
 **[Go to F.A.Q for more information.](#faq)**
 
@@ -61,12 +61,12 @@ console.log(err);
 
 *Example Success Response for Set*
 ```javascript
-{"status":true/1} You can use this response with JSON.parse()
+{"status":true/1} 
 ```
 
 *Example Fail for Set*
 ```javascript
-{"status":false/1} You can use this response with JSON.parse()
+{"status":false/0} 
 ```
 
 **GET**
@@ -115,9 +115,8 @@ console.log(err)
 - *You can see of my code in repo so you can review my code. Also if you want you can easily can fork my repo and changes what bothers you. This package is under MIT license. So I can't give you any warranty.*  **But you should know, I'm using this package in my projects.**
 - **Will you maintain this package?**
 - *Yeah I will planning this. But you know time can change everything.*
-- **Can I buy you a cup of coffee?**
-- *In this moment you can only drink for me too. But if you starred this package that means a lot of thing to me*
-
+-**How can I support you?**
+-*If you're using my package that's enough for me*
 
 ## Thanks
 
