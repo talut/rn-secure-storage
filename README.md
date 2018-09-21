@@ -98,20 +98,15 @@ console.log(err)
 
 ### Example
 
-You can find the usage example of package in example folder. 
+You can find the usage example of package at example folder. 
 
 ```console
 git clone https://github.com/talut/rn-secure-package
-```
-```console
+
 cd rn-secure-package/example
-```
 
-```console
 npm install
-```
 
-```console
 react-native run-ios/android
 ```
 
