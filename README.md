@@ -101,16 +101,21 @@ console.log(err)
 You can find the usage example of package in example folder. 
 
 ```console
-
-$ git clone https://github.com/talut/rn-secure-package
-
-$ cd rn-secure-package/example
-
-$ npm install
-
-$ react-native run-ios/android
-
+git clone https://github.com/talut/rn-secure-package
 ```
+```console
+cd rn-secure-package/example
+```
+
+```console
+npm install
+```
+
+```console
+react-native run-ios/android
+```
+
+
 
 ### Version 1.0.7
 - Android & IOS returing value/messages are updated.
