@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "RNSecureStorage"
-  s.version      = "1.0.4"
+  s.version      = "1.0.7"
   s.summary      = "RNSecureStorage"
   s.description  = <<-DESC
                     Secure Storage for React Native (Android & iOS)

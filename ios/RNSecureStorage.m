@@ -128,19 +128,19 @@ RCT_EXPORT_METHOD(set: (NSString *)key value:(NSString *)value
         [self handleAppUninstallation];
         BOOL status = [self createKeychainValue: value forIdentifier: key options: options];
         if (status) {
-            resolve([NSString stringWithFormat:@"{\"status\":%d}", true]);
+            resolve(@"Key stored successfully");
         } else {
             BOOL status = [self updateKeychainValue: value forIdentifier: key options: options];
             if (status) {
-                resolve([NSString stringWithFormat:@"{\"status\":%d}", true]);
+                resolve(@"Key updated successfully");
             } else {
-                NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
+                NSString* errorMessage = @"An error occurred";
                 reject(@"9", errorMessage, secureKeyStoreError(errorMessage));
             }
         }
     }
     @catch (NSException *exception) {
-        NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
+        NSString* errorMessage = @"key does not present";
         reject(@"9", errorMessage, secureKeyStoreError(errorMessage));
     }
 }
@@ -153,14 +153,14 @@ RCT_EXPORT_METHOD(get:(NSString *)key
         [self handleAppUninstallation];
         NSString *value = [self searchKeychainCopyMatching:key];
         if (value == nil) {
-            NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
+            NSString* errorMessage = @"key does not present";
             reject(@"404", errorMessage, secureKeyStoreError(errorMessage));
         } else {
             resolve(value);
         }
     }
     @catch (NSException *exception) {
-        NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
+        NSString* errorMessage = @"key does not present";
         reject(@"1", errorMessage, secureKeyStoreError(errorMessage));
     }
 }
@@ -172,14 +172,14 @@ RCT_EXPORT_METHOD(remove:(NSString *)key
     @try {
         BOOL status = [self deleteKeychainValue:key];
         if (status) {
-            resolve([NSString stringWithFormat:@"{\"status\":%d}", true]);
+            resolve(@"key removed successfully");
         } else {
-            NSString* errorMessage = [NSString stringWithFormat:@"{\"status\":%d}", false];
+            NSString* errorMessage = @"Could not find the key to delete.";
             reject(@"6", errorMessage, secureKeyStoreError(errorMessage));
         }
     }
     @catch(NSException *exception) {
-        NSString* errorMessage =[NSString stringWithFormat:@"{\"status\":%d}", false];
+        NSString* errorMessage =@"Could not find the key to delete.";
         reject(@"6", errorMessage, secureKeyStoreError(errorMessage));
     }
 }

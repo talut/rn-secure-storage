@@ -14,6 +14,8 @@ import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.securepreferences.SecurePreferences;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     private SharedPreferences prefs;
@@ -37,19 +39,18 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         if (useKeystore()) {
             try {
                 rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                promise.resolve("{\"status\":" + true + "}");
+                promise.resolve("Key stored/updated successfully");
             } catch (Exception e) {
-                e.printStackTrace();
-                promise.reject("{\"status\":" + false + "}");
+                promise.reject(e);
             }
         } else {
             try {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(key, value);
                 editor.apply();
-                promise.resolve("{\"status\":" + true + "}");
+                promise.resolve("Key stored/updated successfully");
             } catch (Exception e) {
-                promise.reject("{\"status\":" + false + "}");
+                promise.reject(e);
             }
         }
     }
@@ -60,15 +61,15 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             try {
                 promise.resolve(rnKeyStore.getPlainText(getReactApplicationContext(), key));
             } catch (FileNotFoundException fnfe) {
-                promise.resolve("{\"status\":" + false + "}");
+                promise.reject(fnfe);
             } catch (Exception e) {
-                promise.resolve("{\"status\":" + false + "}");
+                promise.reject(e);
             }
         } else {
             try {
-                promise.resolve(prefs.getString(key, "{\"status\":" + false + "}"));
+                promise.resolve(prefs.getString(key, null));
             } catch (IllegalViewOperationException e) {
-                promise.resolve("{\"status\":" + false + "}");
+                promise.reject(e);
             }
         }
     }
@@ -76,23 +77,35 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void remove(String key, Promise promise) {
+        ArrayList<Boolean> fileDeleted = new ArrayList<Boolean>();
         if (useKeystore()) {
             try {
-                Storage.resetValues(getReactApplicationContext(), new String[]{
+                for (String filename : new String[]{
                         Constants.SKS_DATA_FILENAME + key,
                         Constants.SKS_KEY_FILENAME + key,
-                });
-                promise.resolve("{\"status\":" + true + "}");
+                }) {
+                    fileDeleted.add(getReactApplicationContext().deleteFile(filename));
+                }
+                if (!fileDeleted.get(0) || !fileDeleted.get(1)){
+                    promise.reject("404","Could not find the key to delete.");
+                }else{
+                    promise.resolve("Key removed successfully");
+
+                }
             } catch (Exception e) {
-                promise.reject("{\"status\":" + false + "}");
+                promise.reject(e);
             }
         } else {
             try {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.remove(key).apply();
-                promise.resolve("{\"status\":" + true + "}");
+                if (prefs.getString(key, null) == null){
+                    promise.reject("404","Could not find the key to delete.");
+                }else {
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.remove(key).apply();
+                    promise.resolve("Key removed successfully");
+                }
             } catch (Exception e) {
-                promise.reject("{\"status\":" + false + "}");
+                promise.reject(e);
             }
         }
     }

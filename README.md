@@ -105,6 +105,11 @@ console.log(err)
 |**`AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY`**|The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user. Items with this attribute never migrate to a new device.|
 |**`ALWAYS_THIS_DEVICE_ONLY`**|The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.|
 
+
+### Version 1.0.7
+- Android & IOS returing value/messages are updated.
+- [Issue:1](https://github.com/talut/rn-secure-storage/issues/1) is solved.
+
 ### F.A.Q
 
 - **Why should I use this package?**
