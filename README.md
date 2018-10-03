@@ -125,7 +125,7 @@ react-native run-ios/android
 
 - **Why should I use this package?**
 - *You can use other packages like react-native-keychain I know that package has more options. But you can store only username, password but you can store a lot of [key,value] with RNSecureStorage*
-- **Why shouldn't I use react-native-secure-key-store**
+- **Why shouldn't I use react-native-secure-key-store?**
 - *You can use that package but you can't get any good solution with lowest API of Android. Also that package is setted minSDK:18.  Thats means you will occur some problems..*
 - **Hey can I trust you code/package?**
 - *You can see of my code in repo so you can review my code. Also if you want you can easily can fork my repo and changes what bothers you. This package is under MIT license. So I can't give you any warranty.*  **But you should know, I'm using this package in my projects.**
