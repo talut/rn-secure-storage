@@ -2,7 +2,7 @@
 
 Almacenamiento seguro para React Native (Android y iOS)
 
-Nota: este paquete es una versión más mejorada de react-native-secure-key-store, RNSecureStorage tiene soporte "bajo api 23"
+Nota: este paquete es una versión más mejorada de [react-native-secure-key-store], RNSecureStorage tiene soporte "bajo api 23"
 
 **[Ir a F.A.Q para más información.]**
 
@@ -26,23 +26,23 @@ npm install --save rn-secure-storage
 
 **Con YARN**
 
-hilado añadir rn-secure-storage
+yarn add rn-secure-storage
 
 **Vinculación automática**
 
-enlace nativo de reacción rn-secure-storage
+react-native link rn-secure-storage
 
 **Enlace manual**
 **Instalación manual (si algo salió mal con el enlace de reacción nativa)**
 
 ##Uso
 
-importar RNSecureStorage, {ACCESSIBLE} desde 'rn-secure-storage'
+import RNSecureStorage, {Accessible} from 'rn-Secure-Storage'
 
 **CONJUNTO**
 
 // {accesible: ACCESSIBLE.WHEN_UNLOCKED} -> Esto para IOS
-RNSecureStorage.set ("key1", "este es un valor", {accesible: ACCESSIBLE.WHEN_UNLOCKED})
+RNSecureStorage.set ("key1", "this is a value", {accesible: ACCESSIBLE.WHEN_UNLOCKED})
 .then ((res) => {
 console.log (res);
 }, (err) => {
@@ -51,22 +51,23 @@ console.log (err);
 
 **OBTENER**
 
-RNSecureStorage.get ("key1"). Luego ((valor) => {
-console.log (valor) // Devolverá el valor directo
+RNSecureStorage.get ("key1").then((value) => {
+console.log (value) // Devolverá el valor directo
 }). catch ((err) => {
 console.log (err)
 })
 
 **RETIRAR**
 
-RNSecureStorage.remove ("key1"). Luego ((val) => {
+RNSecureStorage.remove ("key1").then((val) => {
 console.log (val)
 }). catch ((err) => {
 console.log (err)
 });
 
 ##Opciones
-Clave Plataforma Descripción Predeterminado
+|Clave |Plataforma |Descripción |Predeterminado
+
 solo iOS accesible Esto indica que cuando se puede acceder a un elemento de llavero, vea los valores posibles en Keychain.ACCESSIBLE. Llavero.ACCESIBLE.CONTRECHA
 ##Llavero. ACCESIBLE enumeración
 Descripción clave
@@ -86,9 +87,9 @@ git clone https://github.com/talut/rn-secure-package
 
 cd rn-secure-package / example
 
-npm instalar
+npm install
 
-reaccionar nativo run-ios / android
+react-native run-ios/andriod
 
 ##Versión 1.0.7
 
