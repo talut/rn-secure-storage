@@ -6,13 +6,13 @@ Other available languages of this README
 
 Secure Storage for React Native (Android & iOS) 
 
-*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*
+*Note: This package is an improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*
 
 **[Go to F.A.Q for more information.](#faq)**
 
 ### IOS
 
-RNSecureStorage is using Keychain for secure storaging.
+RNSecureStorage is using Keychain for secure storing.
 
 ### Android
 
@@ -85,7 +85,7 @@ console.log(err)
 
 | Key | Platform | Description | Default |
 |---|---|---|---|
-|**`accessible`**|iOS only|This dictates when a keychain item is accessible, see possible values in `Keychain.ACCESSIBLE`. |*`Keychain.ACCESSIBLE.WHEN_UNLOCKED`*|
+|**`accessible`**|iOS only|This indicates when a keychain item is accessible, see possible values in `Keychain.ACCESSIBLE`. |*`Keychain.ACCESSIBLE.WHEN_UNLOCKED`*|
 
 ### `Keychain.ACCESSIBLE` enum
 
@@ -102,7 +102,7 @@ console.log(err)
 
 ### Example
 
-You can find the usage example of package at example folder. 
+You can find the usage example of the package in the example folder. 
 
 ```console
 git clone https://github.com/talut/rn-secure-package
@@ -123,13 +123,13 @@ react-native run-ios/android
 ### F.A.Q
 
 - **Why should I use this package?**
-- *You can use other packages like react-native-keychain I know that package has more options. But you can store only username, password but you can store a lot of [key,value] with RNSecureStorage*
+- *You can use other packages like react-native-keychain I know that package has more options. But you can store only username and password, while with RNSecureStorage you can store a lot of [key,value] pairs*
 - **Why shouldn't I use react-native-secure-key-store**
-- *You can use that package but you can't get any good solution with lowest API of Android. Also that package is setted minSDK:18.  Thats means you will occur some problems..*
-- **Hey can I trust you code/package?**
-- *You can see of my code in repo so you can review my code. Also if you want you can easily can fork my repo and changes what bothers you. This package is under MIT license. So I can't give you any warranty.*  **But you should know, I'm using this package in my projects.**
+- *You can use that package but you can't get any good solution with lowest API of Android. Also that package is set to minSDK:18.  Thats means you might encounter some problems ...*
+- **Hey can I trust your code/package?**
+- *You can see all of my code in the repo and can review it. Also if you want, you can easily can fork my repo and change what bothers you. This package is under MIT license. So I can't give you any warranty.*  **But you should know, I'm using this package in my projects.**
 - **Will you maintain this package?**
-- *Yeah I will planning this. But you know time can change everything.*
+- *Yeah, I'm planning to do so. But you know time can change everything.*
 -**How can I support you?**
 -*If you're using my package that's enough for me*
 
