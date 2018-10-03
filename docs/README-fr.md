@@ -120,7 +120,7 @@ react-native run-ios/android
 
 - **Pourquoi devrais-je utiliser ce paquet ?**
 - *Vous pouvez utiliser d'autres paquets comme `react-native-keychain`. Mais je sais que ce paquet a plus d'options : Avec react-native-keychain, vous ne pouvez stocker que l'utilisateur, mot de passe alors qu'avec ce paquet vous pouvez stocker beaucoup de [clé,valeur].*
-- **Pourquoi ne devrais-je pas utiliser react-native-secure-key-store**
+- **Pourquoi ne devrais-je pas utiliser react-native-secure-key-store ?**
 - *Vous pouvez utiliser ce paquet, mais vous n'aurez aucun support avec les anciennes version d'Android. De plus, ce paquet est configuré minSDK: 18. Cela signifie que vous allez avoir quelques problèmes.*
 - **Hé, je peux avoir confiance dans votre code/paquet ?**
 - *Vous pouvez consulter le code dans ce projet afin que vous le puissiez le vérifier. De plus, si vous le souhaitez, vous pouvez facilement accéder à mon dépôt et modifier ce qui vous dérange. Ce paquet est sous licence MIT. Je ne peux donc vous donner aucune garantie. * ** Mais sachez que j'utilise ce package dans mes projets.**
