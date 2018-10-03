@@ -1,3 +1,7 @@
+Other available languages of this README
+
+[German](docs/README-de.md)
+
 # RNSecureStorage
 
 Secure Storage for React Native (Android & iOS) 
