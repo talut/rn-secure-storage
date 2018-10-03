@@ -123,6 +123,7 @@ react-native run-ios/android
 - [Indonesia](docs/README-id.md) by [@mfaridzia](https://github.com/mfaridzia)
 - [German](docs/README-de.md) by [@msdeibel](https://github.com/msdeibel)
 - [Dutch](docs/README-nl.md) by [@fpkmatthi](https://github.com/fpkmatthi)
+- [Brazilian Portuguese](docs/README-ptBR.md) by [@HenryFilho](https://github.com/HenryFilho)
 
 ### F.A.Q
 
