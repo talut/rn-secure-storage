@@ -119,7 +119,7 @@ react-native run-ios/android
 - [Issue:1](https://github.com/talut/rn-secure-storage/issues/1) is solved.
 
 ### Translations
-- [French](docs/README-fr.md) by @Vinetos
+- [French](docs/README-fr.md) by [@Vinetos](https://github.com/vinetos)
 
 ### F.A.Q
 
