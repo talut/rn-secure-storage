@@ -2,9 +2,11 @@
 
 Secure Storage for React Native (Android & iOS) 
 
-*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*
+*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*  
 
-**[Go to F.A.Q for more information.](#faq)**
+**[Go to F.A.Q for more information.](#faq)**  
+
+**[Not your main language ? Check out the translations here](#translations)**
 
 ### IOS
 
@@ -115,6 +117,9 @@ react-native run-ios/android
 ### Version 1.0.7
 - Android & IOS returing value/messages are updated.
 - [Issue:1](https://github.com/talut/rn-secure-storage/issues/1) is solved.
+
+### Translations
+- [French](docs/README-fr.md) by @Vinetos
 
 ### F.A.Q
 
