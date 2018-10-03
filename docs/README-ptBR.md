@@ -36,7 +36,7 @@ react-native link rn-secure-storage
 
 **Link Manual**
 
-**[Manual Installation](/docs/manual-installation.md)** (Se algo der errado com o link doreact-native)
+**[Instalação Manual](/docs/manual-installation.md)** (Se algo der errado com o link doreact-native)
 
 
 ## Uso
