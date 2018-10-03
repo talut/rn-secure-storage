@@ -120,6 +120,7 @@ react-native run-ios/android
 
 ### Translations
 - [French](docs/README-fr.md) by [@Vinetos](https://github.com/vinetos)
+- [Brazilian Portuguese](docs/README-ptBR.md) by [@HenryFilho](https://github.com/HenryFilho)
 
 ### F.A.Q
 
