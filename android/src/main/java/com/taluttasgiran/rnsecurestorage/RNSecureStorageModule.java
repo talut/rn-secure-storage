@@ -16,7 +16,11 @@ import com.securepreferences.SecurePreferences;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+/**
+ * 
+ * @author 
+ *
+ */
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     private SharedPreferences prefs;
     private RNKeyStore rnKeyStore;
