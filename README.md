@@ -139,8 +139,8 @@ react-native run-ios/android
 -*If you're using my package that's enough for me*
 
 ## Thanks
-
--  [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
+- Thanks to you [@cagriyilmaz](https://github.com/cagriyilmaz) for IOS part.
+- [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
 
 ## License
 
