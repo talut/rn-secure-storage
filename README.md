@@ -110,7 +110,8 @@ npm install
 react-native run-ios/android
 ```
 
-
+### Version 1.0.81 (a little bug fix)
+- google() repo added because Gradle v3.1.4 can't found.
 
 ### Version 1.0.7
 - Android & IOS returing value/messages are updated.

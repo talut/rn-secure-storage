@@ -7,11 +7,11 @@ Pod::Spec.new do |s|
                     Secure Storage for React Native (Android & iOS)
                    DESC
   s.homepage     = "https://github.com/talut/rn-secure-storage"
-  s.license      = { :type => "MIT", :file => "https://github.com/talut/rn-secure-storage/LICENSE.md" }
-  s.author             = { "Talut Tasgiran" => "info@taluttasgiran.com.tr" }
+  s.license      = { :type => "MIT", :file => "../LICENSE.md" }
+  s.author       = { "Talut Tasgiran" => "info@taluttasgiran.com.tr" }
   s.platform     = :ios, "7.0"
-  s.source       = { :git => "https://github.com/talut/rn-secure-storage.git", :tag => "master" }
-  s.source_files  = "RNSecureStorage/**/*.{h,m}"
+  s.source       = { :git => "https://github.com/talut/rn-secure-storage.git", :tag => "1.0.7" }
+  s.source_files  = "**/*.{h,m}"
   s.requires_arc = true
 
 
