@@ -1,6 +1,6 @@
 # RNSecureStorage
 
-Secure Storage for React Native (Android & iOS) 
+Secure Storage for React Native (Android & iOS) - Version: 1.0.82
 
 *Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*  
 
@@ -112,7 +112,7 @@ npm install
 react-native run-ios/android
 ```
 
-### Version 1.0.81 (a little bug fix)
+### Version 1.0.82 (a little bug fix)
 - google() repo added because Gradle v3.1.4 can't found.
 
 ### Version 1.0.7
