@@ -11,3 +11,4 @@ config.gypi
 CVS
 npm-debug.log
 example
+.idea
