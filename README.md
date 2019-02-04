@@ -43,6 +43,7 @@ react-native link rn-secure-storage
 
 ## Usage
 
+Note: Don't use any special chars at key like `test@key`. This kinda key names can be a problem for IOS/Android
 
 ```javascript
 
