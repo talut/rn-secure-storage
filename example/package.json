@@ -9,7 +9,7 @@
   "dependencies": {
     "react": "16.5.0",
     "react-native": "0.57.0",
-    "rn-secure-storage": "^1.0.7"
+    "rn-secure-storage": "^1.0.82"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
