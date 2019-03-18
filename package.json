@@ -1,7 +1,7 @@
 {
   "name": "rn-secure-storage",
-  "version": "1.0.82",
-  "description": "Secure Storage for React Native (Android & iOS)",
+  "version": "1.0.9",
+  "description": "Secure Storage for React Native (Android & iOS) - Keychain & Keystore",
   "main": "index.js",
   "keywords": [
     "react-native",

@@ -39,7 +39,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         if (useKeystore()) {
             try {
                 rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                promise.resolve("Key stored/updated successfully");
+                promise.resolve("RNSecureStorage: Key stored/updated successfully");
             } catch (Exception e) {
                 promise.reject(e);
             }
@@ -48,7 +48,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(key, value);
                 editor.apply();
-                promise.resolve("Key stored/updated successfully");
+                promise.resolve("RNSecureStorage: Key stored/updated successfully");
             } catch (Exception e) {
                 promise.reject(e);
             }
@@ -87,9 +87,9 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                     fileDeleted.add(getReactApplicationContext().deleteFile(filename));
                 }
                 if (!fileDeleted.get(0) || !fileDeleted.get(1)){
-                    promise.reject("404","Could not find the key to delete.");
+                    promise.reject("404","RNSecureStorage: Could not find the key to delete.");
                 }else{
-                    promise.resolve("Key removed successfully");
+                    promise.resolve("RNSecureStorage: Key removed successfully");
 
                 }
             } catch (Exception e) {
@@ -98,11 +98,11 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         } else {
             try {
                 if (prefs.getString(key, null) == null){
-                    promise.reject("404","Could not find the key to delete.");
+                    promise.reject("404","RNSecureStorage: Could not find the key to delete.");
                 }else {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.remove(key).apply();
-                    promise.resolve("Key removed successfully");
+                    promise.resolve("RNSecureStorage: Key removed successfully");
                 }
             } catch (Exception e) {
                 promise.reject(e);

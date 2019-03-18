@@ -1,7 +1,8 @@
 //
 // RNSecureStorage.m
 //
-//  Created by Talut TAŞGIRAN on 18.09.2018.
+//  Created by Talut TASGIRAN on 18.09.2018.
+//  Updated by Talut TASGIRAN at 18.03.2019
 //
 #import "RNSecureStorage.h"
 
@@ -11,11 +12,12 @@
 {
     return dispatch_get_main_queue();
 }
-RCT_EXPORT_MODULE()
-static NSString *serviceName = @"RNSecureStoragebyTalutTasgiran";
 
+NSString *serviceName;
+RCT_EXPORT_MODULE()
 - (NSMutableDictionary *)newSearchDictionary:(NSString *)identifier {
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
+    serviceName = [[NSBundle mainBundle] bundleIdentifier];
     
     [searchDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
     
