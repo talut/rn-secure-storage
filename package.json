@@ -3,6 +3,7 @@
   "version": "1.0.9",
   "description": "Secure Storage for React Native (Android & iOS) - Keychain & Keystore",
   "main": "index.js",
+  "types": "typescript/rn-secure-storage.d.ts",
   "keywords": [
     "react-native",
     "ios",
