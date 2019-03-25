@@ -1,6 +1,6 @@
 # RNSecureStorage
 
-Secure Storage for React Native (Android & iOS) - Keychain & Keystore **Version: 1.0.9**
+Secure Storage for React Native (Android & iOS) - Keychain & Keystore **Version: 1.1.0**
 
 ##### New version released. Please read release note : [v1.0.9](#version-109)
 
@@ -65,6 +65,7 @@ console.log(err);
 ```
 
 **GET**
+
 ```javascript
 RNSecureStorage.get("key1").then((value) => {
 console.log(value) // Will return direct value
@@ -74,6 +75,7 @@ console.log(err)
 ```
 
 **REMOVE**
+
 ```javascript
 RNSecureStorage.remove("key1").then((val) => {
 console.log(val)
@@ -81,6 +83,7 @@ console.log(val)
 console.log(err)
 });
 ```
+
 
 ## Options
 
@@ -115,7 +118,10 @@ npm install
 react-native run-ios/android
 ```
 
-### Version 1.0.9
+### Version 1.1.0
+- TypeScript support added. Thanks [@akiver](https://github.com/akiver)
+
+#### Version 1.0.9
 - Gradle version updated.
 - Log messages updated. (For IOS)
 - **IOS keychain service name updated right now this package is using main bundle name. If you already using this package in production After this update all IOS user will log out from app automatically.**
@@ -151,6 +157,7 @@ react-native run-ios/android
 
 ## Thanks
 - Thanks to you [@cagriyilmaz](https://github.com/cagriyilmaz) for IOS part.
+- Thanks to you [@akiver](https://github.com/akiver) for TypeScript definitions.
 - [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
 
 ## License
