@@ -145,6 +145,10 @@ public class RNKeyStore {
         return new String(decryptAesCipherText(secretKey, cipherTextBytes), "UTF-8");
     }
 
+    public boolean exists(Context context, String alias) throws IOException {
+        return Storage.exists(context, Constants.SKS_DATA_FILENAME + alias);
+    }
+
 
     private String getKeyStore() {
         try {
