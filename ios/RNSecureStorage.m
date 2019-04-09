@@ -51,6 +51,27 @@ RCT_EXPORT_MODULE()
     return value;
 }
 
+- (BOOL)searchKeychainCopyMatchingExists:(NSString *)identifier {
+    NSMutableDictionary *searchDictionary = [self newSearchDictionary:identifier];
+    
+    // Add search attributes
+    [searchDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+    
+    // Add search return types
+    [searchDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+    
+    NSDictionary *found = nil;
+    CFTypeRef result = NULL;
+    OSStatus status = SecItemCopyMatching((CFDictionaryRef)searchDictionary,
+                                          (CFTypeRef *)&result);
+    
+    found = (__bridge NSDictionary*)(result);
+    if (found) {
+      return YES;
+    }
+    return NO;
+}
+
 - (BOOL)createKeychainValue:(NSString *)value forIdentifier:(NSString *)identifier options: (NSDictionary * __nullable)options {
     CFStringRef accessible = accessibleValue(options);
     NSMutableDictionary *dictionary = [self newSearchDictionary:identifier];
@@ -164,6 +185,24 @@ RCT_EXPORT_METHOD(get:(NSString *)key
     @catch (NSException *exception) {
         NSString* errorMessage = @"key does not present";
         reject(@"1", errorMessage, secureKeyStoreError(errorMessage));
+    }
+}
+
+RCT_EXPORT_METHOD(exists:(NSString *)key
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    @try {
+      [self handleAppUninstallation];
+      BOOL exists = [self searchKeychainCopyMatchingExists:key];
+      if (exists) {
+        resolve(@true);
+      } else {
+        resolve(@false);
+      }
+    }
+    @catch(NSException *exception) {
+      resolve(@false);
     }
 }
 
