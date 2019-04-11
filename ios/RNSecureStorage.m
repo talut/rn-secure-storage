@@ -60,13 +60,11 @@ RCT_EXPORT_MODULE()
     // Add search return types
     [searchDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
     
-    NSDictionary *found = nil;
     CFTypeRef result = NULL;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)searchDictionary,
                                           (CFTypeRef *)&result);
     
-    found = (__bridge NSDictionary*)(result);
-    if (found) {
+    if (status != errSecItemNotFound) {
       return YES;
     }
     return NO;
