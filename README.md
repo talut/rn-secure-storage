@@ -4,8 +4,6 @@ Secure Storage for React Native (Android & iOS) - Keychain & Keystore **Version:
 
 ##### New version released. Please read release note : [v1.0.9](#version-109)
 
-*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*  
-
 **[Go to F.A.Q for more information.](#faq)**  
 
 **[Not your main language ? Check out the translations here](#translations)**
@@ -84,6 +82,17 @@ console.log(err)
 });
 ```
 
+**EXISTS**
+```javascript
+// res -> is can be True or False
+RNSecureStorage.exists("key1")
+.then((res) => {
+console.log(res ? "Key exists": "Key not exists")
+}, (err) => {
+console.log(err);
+});
+```
+
 
 ## Options
 
@@ -118,6 +127,9 @@ npm install
 react-native run-ios/android
 ```
 
+### Version 1.1.1
+- Exists method added. Thanks [@kirin-p](https://github.com/kirin-p)
+
 ### Version 1.1.0
 - TypeScript support added. Thanks [@akiver](https://github.com/akiver)
 
@@ -125,8 +137,6 @@ react-native run-ios/android
 - Gradle version updated.
 - Log messages updated. (For IOS)
 - **IOS keychain service name updated right now this package is using main bundle name. If you already using this package in production After this update all IOS user will log out from app automatically.**
-
-
 
 #### Version 1.0.82 (a little bug fix)
 - google() repo added because Gradle v3.1.4 can't found.
@@ -155,9 +165,13 @@ react-native run-ios/android
 -**How can I support you?**
 -*If you're using my package that's enough for me*
 
+*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*  
+
+
 ## Thanks
 - Thanks to you [@cagriyilmaz](https://github.com/cagriyilmaz) for IOS part.
 - Thanks to you [@akiver](https://github.com/akiver) for TypeScript definitions.
+- Thanks to you [@kirin-p](https://github.com/kirin-p) for exits method.
 - [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
 
 ## License
