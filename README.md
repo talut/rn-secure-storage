@@ -130,7 +130,7 @@ react-native run-ios/android
 ### Version 1.1.1
 - Exists method added. Thanks [@kirin-p](https://github.com/kirin-p)
 
-### Version 1.1.0
+#### Version 1.1.0
 - TypeScript support added. Thanks [@akiver](https://github.com/akiver)
 
 #### Version 1.0.9
