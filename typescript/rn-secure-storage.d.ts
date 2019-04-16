@@ -66,6 +66,10 @@ declare module "rn-secure-storage" {
      */
     get(key: string): Promise<string | null>;
     /**
+     * Checks if a key has been set.
+     */
+    exists(key: string): Promise<boolean | null>;
+    /**
      * Set a value from secure storage.
      */
     set(

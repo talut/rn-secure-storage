@@ -74,6 +74,22 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void exists(String key, Promise promise) {
+        if (useKeystore()) {
+            try {
+                promise.resolve(rnKeyStore.exists(getReactApplicationContext(), key));
+            } catch (Exception e) {
+                promise.reject(e);
+            }
+        } else {
+            try {
+                promise.resolve(prefs.contains(key));
+            } catch (IllegalViewOperationException e) {
+                promise.reject(e);
+            }
+        }
+    }
 
     @ReactMethod
     public void remove(String key, Promise promise) {
