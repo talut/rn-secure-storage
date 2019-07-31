@@ -1,5 +1,5 @@
 package com.taluttasgiran.rnsecurestorage;
-public class Constants {
+public class Constants {a
 
     // Key Store
     public static final String KEYSTORE_PROVIDER_1 = "AndroidKeyStore";

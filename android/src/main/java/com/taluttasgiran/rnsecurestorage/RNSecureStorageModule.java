@@ -2,7 +2,8 @@ package com.taluttasgiran.rnsecurestorage;
 
 import android.content.SharedPreferences;
 import android.os.Build;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -13,6 +14,7 @@ import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.securepreferences.SecurePreferences;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
