@@ -1,6 +1,5 @@
 package com.taluttasgiran.rnsecurestorage;
 public class Constants {
-
     // Key Store
     public static final String KEYSTORE_PROVIDER_1 = "AndroidKeyStore";
     public static final String KEYSTORE_PROVIDER_2 = "AndroidKeyStoreBCWorkaround";
