@@ -3,11 +3,7 @@
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
 
-#### v2.0.0 version now has AndroidX support.
-
-```bash
-yarn add rn-secure-storage@androidx
-```
+#### v2.0.1 version now has AndroidX support.
 
 **[Go to F.A.Q for more information.](#faq)**  
 
