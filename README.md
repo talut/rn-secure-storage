@@ -128,7 +128,7 @@ npm install
 react-native run-ios/android
 ```
 
-### Version 2.0.0 (AndroidX Support)
+### Version 2.0.1 (AndroidX Support)
 - Update to AndroidX. Make sure to enable it in your project's android/gradle.properties.
 
 ### Version 1.1.1
