@@ -3,7 +3,7 @@
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
 
-### v2.0.1 version now has AndroidX support. If you want to use this package without AndroidX support please use *v1.1.0*
+### v2.0.1 version now has AndroidX support. If you want to use this package without AndroidX support please use *v1.1.1*
 
 **[Go to F.A.Q for more information.](#faq)**  
 
