@@ -14,6 +14,7 @@ import com.securepreferences.SecurePreferences;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     private SharedPreferences prefs;
@@ -36,8 +37,12 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     public void set(String key, String value, @Nullable ReadableMap options, Promise promise) {
         if (useKeystore()) {
             try {
+                Locale initialLocale = Locale.getDefault();
+                Locale.setDefault(Locale.ENGLISH);
                 rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
                 promise.resolve("RNSecureStorage: Key stored/updated successfully");
+                // Reset default locale
+                Locale.setDefault(initialLocale);
             } catch (Exception e) {
                 promise.reject(e);
             }
