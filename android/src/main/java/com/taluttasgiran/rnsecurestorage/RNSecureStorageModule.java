@@ -2,6 +2,7 @@ package com.taluttasgiran.rnsecurestorage;
 
 import android.content.SharedPreferences;
 import android.os.Build;
+
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Promise;
@@ -14,10 +15,18 @@ import com.securepreferences.SecurePreferences;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     private SharedPreferences prefs;
     private RNKeyStore rnKeyStore;
+
+    public static boolean isRTL(Locale locale) {
+
+        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+    }
 
     RNSecureStorageModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -35,6 +44,20 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void set(String key, String value, @Nullable ReadableMap options, Promise promise) {
         if (useKeystore()) {
+            try {
+                Locale initialLocale = Locale.getDefault();
+                if (isRTL(initialLocale)) {
+                    Locale.setDefault(Locale.ENGLISH);
+                    rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
+                    promise.resolve("RNSecureStorage: Key stored/updated successfully");
+                    Locale.setDefault(initialLocale);
+                } else {
+                    rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
+                    promise.resolve("RNSecureStorage: Key stored/updated successfully");
+                }
+            } catch (Exception e) {
+                promise.reject(e);
+            }
             try {
                 rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
                 promise.resolve("RNSecureStorage: Key stored/updated successfully");
@@ -100,9 +123,9 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 }) {
                     fileDeleted.add(getReactApplicationContext().deleteFile(filename));
                 }
-                if (!fileDeleted.get(0) || !fileDeleted.get(1)){
-                    promise.reject("404","RNSecureStorage: Could not find the key to delete.");
-                }else{
+                if (!fileDeleted.get(0) || !fileDeleted.get(1)) {
+                    promise.reject("404", "RNSecureStorage: Could not find the key to delete.");
+                } else {
                     promise.resolve("RNSecureStorage: Key removed successfully");
 
                 }
@@ -111,9 +134,9 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             }
         } else {
             try {
-                if (prefs.getString(key, null) == null){
-                    promise.reject("404","RNSecureStorage: Could not find the key to delete.");
-                }else {
+                if (prefs.getString(key, null) == null) {
+                    promise.reject("404", "RNSecureStorage: Could not find the key to delete.");
+                } else {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.remove(key).apply();
                     promise.resolve("RNSecureStorage: Key removed successfully");
