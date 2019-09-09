@@ -130,10 +130,10 @@ npm install
 react-native run-ios/android
 ```
 
-### Version 2.0.2 (AndroidX Support)
+### Version 2.0.2
 - When phone default locale including RTL then this workaround is setting English locale before generating a key pair and changing it back after all.
 
-### Version 2.0.1 (AndroidX Support)
+### Version 2.0.1 (AndroidX Support added)
 - Update to AndroidX. Make sure to enable it in your project's android/gradle.properties.
 
 #### Version 1.1.1
