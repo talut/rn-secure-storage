@@ -3,7 +3,9 @@
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
 
-### v2.0.1 version now has AndroidX support. If you want to use this package without AndroidX support please use *v1.1.0*
+### v2.0.1 version now has AndroidX support. If you want to use this package without AndroidX support please use *v1.1.1*
+
+### Facebook RN blog post about v0.60 and AndroidX support: [https://facebook.github.io/react-native/blog/2019/07/03/version-60](https://facebook.github.io/react-native/blog/2019/07/03/version-60)
 
 **[Go to F.A.Q for more information.](#faq)**  
 
@@ -131,7 +133,7 @@ react-native run-ios/android
 ### Version 2.0.2 (AndroidX Support)
 - When phone default locale including RTL then this workaround is setting English locale before generating a key pair and changing it back after all.
 
-#### Version 2.0.0 (AndroidX Support)
+### Version 2.0.1 (AndroidX Support)
 - Update to AndroidX. Make sure to enable it in your project's android/gradle.properties.
 
 #### Version 1.1.1
