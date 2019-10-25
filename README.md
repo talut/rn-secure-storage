@@ -129,6 +129,8 @@ npm install
 
 react-native run-ios/android
 ```
+### Version 2.0.3
+- [https://github.com/talut/rn-secure-storage/pull/40](https://github.com/talut/rn-secure-storage/pull/40) merged.
 
 ### Version 2.0.2
 - When phone default locale including RTL then this workaround is setting English locale before generating a key pair and changing it back after all.
