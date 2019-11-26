@@ -4,7 +4,7 @@
 // TypeScript Version: 2.8
 
 declare module "rn-secure-storage" {
-  enum ACCESSIBLE {
+  export enum ACCESSIBLE {
     /**
      * The data in the keychain item cannot be accessed after a restart until the device
      * has been unlocked once by the user.
@@ -47,8 +47,6 @@ declare module "rn-secure-storage" {
     WHEN_UNLOCKED_THIS_DEVICE_ONLY = "AccessibleWhenUnlockedThisDeviceOnly"
   }
 
-  export { ACCESSIBLE };
-
   type SetOptions = {
     /**
      * iOS ONLY!
@@ -60,7 +58,7 @@ declare module "rn-secure-storage" {
 
   const RNSecureStorage: RNSecureStorageStatic;
 
-  interface RNSecureStorageStatic {
+  export interface RNSecureStorageStatic {
     /**
      * Get a value from secure storage.
      */
