@@ -33,11 +33,16 @@ npm install --save rn-secure-storage
 yarn add rn-secure-storage
 ```
 
-**Automatic linking**
+**IOS**
 
+If you don't have CocoaPods installed: `sudo gem install cocoapods`
+
+```sh
+cd ios && pod install
 ```
-react-native link rn-secure-storage
-```
+
+**Android**
+There is no required action for Android.
 
 **Manual Linking**
 
@@ -129,6 +134,10 @@ npm install
 
 react-native run-ios/android
 ```
+### Version 2.0.4
+- [https://github.com/talut/rn-secure-storage/pull/44](https://github.com/talut/rn-secure-storage/pull/44) merged.
+- [https://github.com/talut/rn-secure-storage/pull/46](https://github.com/talut/rn-secure-storage/pull/46) merged.
+
 ### Version 2.0.3
 - [https://github.com/talut/rn-secure-storage/pull/40](https://github.com/talut/rn-secure-storage/pull/40) merged.
 
