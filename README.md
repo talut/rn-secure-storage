@@ -32,8 +32,8 @@ yarn add rn-secure-storage
 ### Version 3.0.0
 - IOS part rewrote with Swift.
 - Get all keys feature added.
-- Remove all feature added.
-- Multi get feature added.
+- Remove all stored values feature added.
+- Multi getting values by keys feature added.
 
 ### [Version 2.0.4](./README-v2.0.4.md)
 
@@ -147,14 +147,12 @@ react-native run-ios/android
 
 ### F.A.Q
 
-- **Why should I use this package?**
-- *You can use other packages like react-native-keychain I know that package has more options. But you can store only username and password, while with RNSecureStorage you can store a lot of [key,value] pairs*
-- **Why shouldn't I use react-native-secure-key-store**
-- *You can use that package but you can't get any good solution with lowest API of Android. Also that package is set to minSDK:18.  Thats means you might encounter some problems ...*
 - **Hey can I trust your code/package?**
 - *You can see all of my code in the repo and can review it. Also if you want, you can easily can fork my repo and change what bothers you. This package is under MIT license. So I can't give you any warranty.*  **But you should know, I'm using this package in my projects.**
+
 - **Will you maintain this package?**
-- *Yeah, I'm planning to do so. But you know time can change everything.*
+- *Yeah, I'm planning to do so.3*
+
 -**How can I support you?**
 -*You can use Patreon: [patreon.com/talut](https://patreon.com/talut)*
 
