@@ -2,24 +2,19 @@
 
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
-
-### After v2 this package has AndroidX support. If you want to use without AndroidX please use *v1.1.1*
-
-### Facebook RN blog post about v0.60 and AndroidX support: [https://facebook.github.io/react-native/blog/2019/07/03/version-60](https://facebook.github.io/react-native/blog/2019/07/03/version-60)
+### With v3, this package's IOS part rewrote with Swift.
 
 **[Go to F.A.Q for more information.](#faq)**  
 
-**[Not your main language ? Check out the translations here](#translations)**
-
 ### IOS
 
-RNSecureStorage is using Keychain for secure storing.
+RNSecureStorage is using Keychain for secure storing with Swift.
 
 ### Android
 
-Under API 23 RNSecureStorage is using [secure-preferences](https://github.com/scottyab/secure-preferences/) by [@scottyab](https://github.com/scottyab)
+Under API 23 RNSecureStorage is using
 
-Above API 23 RNSecureStorage is using [Android Keystore](https://developer.android.com/training/articles/keystore)
+Above API 23 RNSecureStorage is using
 
 ## Getting Started
 
@@ -33,39 +28,22 @@ npm install --save rn-secure-storage
 yarn add rn-secure-storage
 ```
 
-**IOS**
 
-If you don't have CocoaPods installed: `sudo gem install cocoapods`
+### Version 3.0.0
+- IOS part rewrote with Swift.
+- Get all keys feature added.
+- Remove all feature added.
+- Multi get feature added.
 
-```sh
-cd ios && pod install
-```
+### [Version 2.0.4](./README-v2.0.4.md)
 
-**Android**
-There is no required action for Android.
-
-**Manual Linking**
-
-**[Manual Installation](/docs/manual-installation.md)** (If something went wrong with react-native link)
-
-
-## Usage
-
-Note: Don't use any special chars at key like `test@key`. This kinda key names can be a problem for IOS/Android
 
 ```javascript
-
 import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
-
 ```
 
-**SET**
 ```javascript
-  import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage"
   // {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This is only for IOS
-  const [keys, setKeys] = useState([])
-  const [values, setValues] = useState()
-
   const storeItem = () => {
     RNSecureStorage.set("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
       .then(res => {
@@ -115,7 +93,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   const getAllKeys = () => {
     RNSecureStorage.getAllKeys()
       .then(res => {
-        setKeys(res)
+        console.log(res)
       })
       .catch(err => {
         console.log(err)
@@ -123,9 +101,9 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const multiGet = () => {
-    RNSecureStorage.multiGet(keys)
+    RNSecureStorage.multiGet(["token","password","email"])
       .then(res => {
-        setValues(res)
+        console.log(res)
       })
       .catch(err => {
         console.log(err)
@@ -166,10 +144,6 @@ npm install
 
 react-native run-ios/android
 ```
-### Version 3.0.0
-- Get All Key api
-
-### [Version 2.0.4](./README-v2.0.4.md)
 
 ### F.A.Q
 
