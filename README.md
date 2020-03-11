@@ -61,44 +61,76 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
 
 **SET**
 ```javascript
-// {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This for IOS
-RNSecureStorage.set("key1", "this is a value", {accessible: ACCESSIBLE.WHEN_UNLOCKED})
-.then((res) => {
-console.log(res);
-}, (err) => {
-console.log(err);
-});
-```
+  import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage"
+  // {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This is only for IOS
+  const [keys, setKeys] = useState([])
+  const [values, setValues] = useState()
 
-**GET**
+  const storeItem = () => {
+    RNSecureStorage.set("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
-```javascript
-RNSecureStorage.get("key1").then((value) => {
-console.log(value) // Will return direct value
-}).catch((err) => {
-console.log(err)
-})
-```
+  const getItem = () => {
+    RNSecureStorage.get("token")
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
-**REMOVE**
+  const removeItem = () => {
+    RNSecureStorage.remove("token")
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
-```javascript
-RNSecureStorage.remove("key1").then((val) => {
-console.log(val)
-}).catch((err) => {
-console.log(err)
-});
-```
+  const removeAll = () => {
+    RNSecureStorage.removeAll()
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
-**EXISTS**
-```javascript
-// res -> is can be True or False
-RNSecureStorage.exists("key1")
-.then((res) => {
-console.log(res ? "Key exists": "Key not exists")
-}, (err) => {
-console.log(err);
-});
+  const itemExist = () => {
+    RNSecureStorage.exist("token").then(res => {
+      console.log(res)
+    })
+  }
+
+  const getAllKeys = () => {
+    RNSecureStorage.getAllKeys()
+      .then(res => {
+        setKeys(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  const multiGet = () => {
+    RNSecureStorage.multiGet(keys)
+      .then(res => {
+        setValues(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 ```
 
 
@@ -134,43 +166,10 @@ npm install
 
 react-native run-ios/android
 ```
-### Version 2.0.4
-- [https://github.com/talut/rn-secure-storage/pull/44](https://github.com/talut/rn-secure-storage/pull/44) merged.
-- [https://github.com/talut/rn-secure-storage/pull/46](https://github.com/talut/rn-secure-storage/pull/46) merged.
+### Version 3.0.0
+- Get All Key api
 
-### Version 2.0.3
-- [https://github.com/talut/rn-secure-storage/pull/40](https://github.com/talut/rn-secure-storage/pull/40) merged.
-
-### Version 2.0.2
-- When phone default locale including RTL then this workaround is setting English locale before generating a key pair and changing it back after all.
-
-### Version 2.0.1 (AndroidX Support added)
-- Update to AndroidX. Make sure to enable it in your project's android/gradle.properties.
-
-#### Version 1.1.1
-- Exists method added. Thanks [@kirin-p](https://github.com/kirin-p)
-
-#### Version 1.1.0
-- TypeScript support added. Thanks [@akiver](https://github.com/akiver)
-
-#### Version 1.0.9
-- Gradle version updated.
-- Log messages updated. (For IOS)
-- **IOS keychain service name updated right now this package is using main bundle name. If you already using this package in production After this update all IOS user will log out from app automatically.**
-
-#### Version 1.0.82 (a little bug fix)
-- google() repo added because Gradle v3.1.4 can't found.
-
-#### Version 1.0.7
-- Android & IOS returing value/messages are updated.
-- [Issue:1](https://github.com/talut/rn-secure-storage/issues/1) is solved.
-
-### Translations
-- [French](docs/README-fr.md) by [@Vinetos](https://github.com/vinetos)
-- [Indonesia](docs/README-id.md) by [@mfaridzia](https://github.com/mfaridzia)
-- [German](docs/README-de.md) by [@msdeibel](https://github.com/msdeibel)
-- [Dutch](docs/README-nl.md) by [@fpkmatthi](https://github.com/fpkmatthi)
-- [Brazilian Portuguese](docs/README-ptBR.md) by [@HenryFilho](https://github.com/HenryFilho)
+### [Version 2.0.4](./README-v2.0.4.md)
 
 ### F.A.Q
 
@@ -183,16 +182,8 @@ react-native run-ios/android
 - **Will you maintain this package?**
 - *Yeah, I'm planning to do so. But you know time can change everything.*
 -**How can I support you?**
--*If you're using my package that's enough for me*
+-*You can use Patreon: [patreon.com/talut](https://patreon.com/talut)*
 
-*Note: This package is more improved version of [react-native-secure-key-store](https://github.com/pradeep1991singh/react-native-secure-key-store), RNSecureStorage has "under api 23" support*  
-
-
-## Thanks
-- Thanks to you [@cagriyilmaz](https://github.com/cagriyilmaz) for IOS part.
-- Thanks to you [@akiver](https://github.com/akiver) for TypeScript definitions.
-- Thanks to you [@kirin-p](https://github.com/kirin-p) for exits method.
-- [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
 
 ## License
 
