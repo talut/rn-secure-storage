@@ -1,7 +1,6 @@
 package com.taluttasgiran.rnsecurestorage;
 
 import android.content.Context;
-import android.os.Build;
 import android.security.KeyPairGeneratorSpec;
 import android.util.Log;
 
@@ -13,6 +12,7 @@ import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Calendar;
@@ -28,7 +28,7 @@ import javax.security.auth.x500.X500Principal;
 public class RNKeyStore {
 
     private PublicKey getOrCreatePublicKey(Context context, String alias) throws GeneralSecurityException, IOException {
-        KeyStore keyStore = KeyStore.getInstance(getKeyStore());
+        KeyStore keyStore = getKeyStore();
         keyStore.load(null);
 
         if (!keyStore.containsAlias(alias) || keyStore.getCertificate(alias) == null) {
@@ -45,7 +45,7 @@ public class RNKeyStore {
                     .setEndDate(end.getTime())
                     .build();
 
-            KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", getKeyStore());
+            KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", keyStore.getProvider());
             generator.initialize(spec);
             generator.generateKeyPair();
 
@@ -104,7 +104,7 @@ public class RNKeyStore {
     }
 
     private PrivateKey getPrivateKey(String alias) throws GeneralSecurityException, IOException {
-        KeyStore keyStore = KeyStore.getInstance(getKeyStore());
+        KeyStore keyStore = getKeyStore();
         keyStore.load(null);
         return (PrivateKey) keyStore.getKey(alias, null);
     }
@@ -150,16 +150,14 @@ public class RNKeyStore {
     }
 
 
-    private String getKeyStore() {
+    private KeyStore getKeyStore() throws KeyStoreException {
         try {
-            KeyStore.getInstance(Constants.KEYSTORE_PROVIDER_1);
-            return Constants.KEYSTORE_PROVIDER_1;
+            return KeyStore.getInstance(Constants.KEYSTORE_PROVIDER_1);
         } catch (Exception err) {
             try {
-                KeyStore.getInstance(Constants.KEYSTORE_PROVIDER_2);
-                return Constants.KEYSTORE_PROVIDER_2;
+                return KeyStore.getInstance(Constants.KEYSTORE_PROVIDER_2);
             } catch (Exception e) {
-                return Constants.KEYSTORE_PROVIDER_3;
+                return KeyStore.getInstance(Constants.KEYSTORE_PROVIDER_3);
             }
         }
     }

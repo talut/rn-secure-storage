@@ -2,8 +2,7 @@ package com.taluttasgiran.rnsecurestorage;
 
 import android.content.SharedPreferences;
 import android.os.Build;
-
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -49,18 +48,12 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 if (isRTL(initialLocale)) {
                     Locale.setDefault(Locale.ENGLISH);
                     rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                    promise.resolve("RNSecureStorage: Key stored/updated successfully");
                     Locale.setDefault(initialLocale);
+                    promise.resolve("RNSecureStorage: Key stored/updated successfully");
                 } else {
                     rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
                     promise.resolve("RNSecureStorage: Key stored/updated successfully");
                 }
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-            try {
-                rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                promise.resolve("RNSecureStorage: Key stored/updated successfully");
             } catch (Exception e) {
                 promise.reject(e);
             }
