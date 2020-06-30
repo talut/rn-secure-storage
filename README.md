@@ -134,6 +134,9 @@ npm install
 
 react-native run-ios/android
 ```
+### Version 2.0.5
+- [https://github.com/talut/rn-secure-storage/pull/51](https://github.com/talut/rn-secure-storage/pull/51) merged.
+
 ### Version 2.0.4
 - [https://github.com/talut/rn-secure-storage/pull/44](https://github.com/talut/rn-secure-storage/pull/44) merged.
 - [https://github.com/talut/rn-secure-storage/pull/46](https://github.com/talut/rn-secure-storage/pull/46) merged.
