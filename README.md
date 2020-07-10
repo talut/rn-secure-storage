@@ -153,8 +153,8 @@ react-native run-ios/android
 - **Will you maintain this package?**
 - *Yeah, I'm planning to do so.3*
 
--**How can I support you?**
--*You can use Patreon: [patreon.com/talut](https://patreon.com/talut)*
+- **How can I support you?**
+- *You can use Patreon: [patreon.com/talut](https://patreon.com/talut)*
 
 
 ## License
