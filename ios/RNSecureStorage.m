@@ -18,31 +18,31 @@ RCT_EXPORT_MODULE()
 - (NSMutableDictionary *)newSearchDictionary:(NSString *)identifier {
     NSMutableDictionary *searchDictionary = [[NSMutableDictionary alloc] init];
     serviceName = [[NSBundle mainBundle] bundleIdentifier];
-    
+
     [searchDictionary setObject:(id)kSecClassGenericPassword forKey:(id)kSecClass];
-    
+
     NSData *encodedIdentifier = [identifier dataUsingEncoding:NSUTF8StringEncoding];
     [searchDictionary setObject:encodedIdentifier forKey:(id)kSecAttrGeneric];
     [searchDictionary setObject:encodedIdentifier forKey:(id)kSecAttrAccount];
     [searchDictionary setObject:serviceName forKey:(id)kSecAttrService];
-    
+
     return searchDictionary;
 }
 
 - (NSString *)searchKeychainCopyMatching:(NSString *)identifier {
     NSMutableDictionary *searchDictionary = [self newSearchDictionary:identifier];
-    
+
     // Add search attributes
     [searchDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-    
+
     // Add search return types
     [searchDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-    
+
     NSDictionary *found = nil;
     CFTypeRef result = NULL;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)searchDictionary,
                                           (CFTypeRef *)&result);
-    
+
     NSString *value = nil;
     found = (__bridge NSDictionary*)(result);
     if (found) {
@@ -53,17 +53,17 @@ RCT_EXPORT_MODULE()
 
 - (BOOL)searchKeychainCopyMatchingExists:(NSString *)identifier {
     NSMutableDictionary *searchDictionary = [self newSearchDictionary:identifier];
-    
+
     // Add search attributes
     [searchDictionary setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-    
+
     // Add search return types
     [searchDictionary setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-    
+
     CFTypeRef result = NULL;
     OSStatus status = SecItemCopyMatching((CFDictionaryRef)searchDictionary,
                                           (CFTypeRef *)&result);
-    
+
     if (status != errSecItemNotFound) {
       return YES;
     }
@@ -73,13 +73,13 @@ RCT_EXPORT_MODULE()
 - (BOOL)createKeychainValue:(NSString *)value forIdentifier:(NSString *)identifier options: (NSDictionary * __nullable)options {
     CFStringRef accessible = accessibleValue(options);
     NSMutableDictionary *dictionary = [self newSearchDictionary:identifier];
-    
+
     NSData *valueData = [value dataUsingEncoding:NSUTF8StringEncoding];
     [dictionary setObject:valueData forKey:(id)kSecValueData];
     dictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessible;
-    
+
     OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, NULL);
-    
+
     if (status == errSecSuccess) {
         return YES;
     }
@@ -87,7 +87,7 @@ RCT_EXPORT_MODULE()
 }
 
 - (BOOL)updateKeychainValue:(NSString *)password forIdentifier:(NSString *)identifier options:(NSDictionary * __nullable)options {
-    
+
     CFStringRef accessible = accessibleValue(options);
     NSMutableDictionary *searchDictionary = [self newSearchDictionary:identifier];
     NSMutableDictionary *updateDictionary = [[NSMutableDictionary alloc] init];
@@ -96,7 +96,7 @@ RCT_EXPORT_MODULE()
     updateDictionary[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessible;
     OSStatus status = SecItemUpdate((CFDictionaryRef)searchDictionary,
                                     (CFDictionaryRef)updateDictionary);
-    
+
     if (status == errSecSuccess) {
         return YES;
     }
@@ -203,6 +203,7 @@ RCT_EXPORT_METHOD(exists:(NSString *)key
       resolve(@false);
     }
 }
+// Test
 
 RCT_EXPORT_METHOD(remove:(NSString *)key
                   resolver:(RCTPromiseResolveBlock)resolve
