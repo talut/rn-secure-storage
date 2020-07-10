@@ -1,152 +1,75 @@
 package com.taluttasgiran.rnsecurestorage;
 
-import android.content.SharedPreferences;
-import android.os.Build;
+import android.util.Log;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.uimanager.IllegalViewOperationException;
-import com.securepreferences.SecurePreferences;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Locale;
+import javax.annotation.Nullable;
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
-    private SharedPreferences prefs;
-    private RNKeyStore rnKeyStore;
+    private static ReactApplicationContext reactContext;
 
-    public static boolean isRTL(Locale locale) {
-
-        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
-        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
-                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+    RNSecureStorageModule(ReactApplicationContext context) {
+        super(context);
+        reactContext = context;
     }
 
-    RNSecureStorageModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        if (useKeystore()) {
-            rnKeyStore = new RNKeyStore();
-        } else {
-            prefs = new SecurePreferences(getReactApplicationContext(), (String) null, "e4b001df9a082298dd090bb7455c45d92fbd5ddd.xml");
-        }
-    }
 
-    private boolean useKeystore() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    @ReactMethod
+    public void setItem(String key, String value, @Nullable ReadableMap options, Promise promise) {
+        Log.d("RNSecureStorage: Key", key);
+        Log.d("RNSecureStorage: Value", value);
     }
 
     @ReactMethod
-    public void set(String key, String value, @Nullable ReadableMap options, Promise promise) {
-        if (useKeystore()) {
-            try {
-                Locale initialLocale = Locale.getDefault();
-                if (isRTL(initialLocale)) {
-                    Locale.setDefault(Locale.ENGLISH);
-                    rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                    promise.resolve("RNSecureStorage: Key stored/updated successfully");
-                    Locale.setDefault(initialLocale);
-                } else {
-                    rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                    promise.resolve("RNSecureStorage: Key stored/updated successfully");
-                }
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-            try {
-                rnKeyStore.setCipherText(getReactApplicationContext(), key, value);
-                promise.resolve("RNSecureStorage: Key stored/updated successfully");
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        } else {
-            try {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(key, value);
-                editor.apply();
-                promise.resolve("RNSecureStorage: Key stored/updated successfully");
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        }
+    public void getItem(String key, Promise promise) {
+        Log.d("RNSecureStorage: Key", key);
     }
 
     @ReactMethod
-    public void get(String key, Promise promise) {
-        if (useKeystore()) {
-            try {
-                promise.resolve(rnKeyStore.getPlainText(getReactApplicationContext(), key));
-            } catch (FileNotFoundException fnfe) {
-                promise.reject(fnfe);
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        } else {
-            try {
-                promise.resolve(prefs.getString(key, null));
-            } catch (IllegalViewOperationException e) {
-                promise.reject(e);
-            }
-        }
+    public void exist(String key, Promise promise) {
+        Log.d("RNSecureStorage: Key", key);
     }
 
     @ReactMethod
-    public void exists(String key, Promise promise) {
-        if (useKeystore()) {
-            try {
-                promise.resolve(rnKeyStore.exists(getReactApplicationContext(), key));
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        } else {
-            try {
-                promise.resolve(prefs.contains(key));
-            } catch (IllegalViewOperationException e) {
-                promise.reject(e);
-            }
-        }
+    public void getAllKeys(Promise promise) {
+        Log.d("RNSecureStorage:", "getAllKeys");
     }
 
     @ReactMethod
-    public void remove(String key, Promise promise) {
-        ArrayList<Boolean> fileDeleted = new ArrayList<Boolean>();
-        if (useKeystore()) {
-            try {
-                for (String filename : new String[]{
-                        Constants.SKS_DATA_FILENAME + key,
-                        Constants.SKS_KEY_FILENAME + key,
-                }) {
-                    fileDeleted.add(getReactApplicationContext().deleteFile(filename));
-                }
-                if (!fileDeleted.get(0) || !fileDeleted.get(1)) {
-                    promise.reject("404", "RNSecureStorage: Could not find the key to delete.");
-                } else {
-                    promise.resolve("RNSecureStorage: Key removed successfully");
-
-                }
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        } else {
-            try {
-                if (prefs.getString(key, null) == null) {
-                    promise.reject("404", "RNSecureStorage: Could not find the key to delete.");
-                } else {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.remove(key).apply();
-                    promise.resolve("RNSecureStorage: Key removed successfully");
-                }
-            } catch (Exception e) {
-                promise.reject(e);
-            }
-        }
+    public void multiSet(ReadableArray keyValuePair, Promise promise) {
+        Log.d("RNSecureStorage", String.valueOf(keyValuePair.getArray(0).getString(0)));
     }
 
+    @ReactMethod
+    public void multiGet(ReadableArray keys, Promise promise) {
+        Log.d("RNSecureStorage", String.valueOf(keys));
+    }
+
+
+    @ReactMethod
+    public void removeItem(String key, Promise promise) {
+        Log.d("RNSecureStorage: Key", key);
+    }
+
+    @ReactMethod
+    public void multiRemove(ReadableArray keys, Promise promise) {
+        Log.d("RNSecureStorage", String.valueOf(keys));
+    }
+
+    @ReactMethod
+    public void clear(Promise promise) {
+        Log.d("RNSecureStorage", "clear");
+    }
+
+    @NonNull
     @Override
     public String getName() {
         return "RNSecureStorage";
