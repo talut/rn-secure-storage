@@ -1,6 +1,6 @@
-// Type definitions for rn-secure-storage 1.0.9
+// Type definitions for rn-secure-storage 3.0.0
 // Project: https://github.com/akiver/rn-secure-storage
-// Definitions by: AkiVer <https://github.com/akiver>
+// Definitions by: Talut TASGIRAN <https://github.com/talut>
 // TypeScript Version: 2.8
 
 declare module "rn-secure-storage" {
@@ -44,7 +44,7 @@ declare module "rn-secure-storage" {
      * unlocked by the user.
      * Items with this attribute do not migrate to a new device.
      */
-    WHEN_UNLOCKED_THIS_DEVICE_ONLY = "AccessibleWhenUnlockedThisDeviceOnly"
+    WHEN_UNLOCKED_THIS_DEVICE_ONLY = "AccessibleWhenUnlockedThisDeviceOnly",
   }
 
   type SetOptions = {
@@ -53,33 +53,49 @@ declare module "rn-secure-storage" {
      * This indicates when a keychain item is accessible, see possible values in RNSecureStorage.ACCESSIBLE.
      * Default: ACCESSIBLE.WHEN_UNLOCKED
      */
-    accessible: ACCESSIBLE;
-  };
+    accessible: ACCESSIBLE
+  }
 
-  const RNSecureStorage: RNSecureStorageStatic;
+  const RNSecureStorage: RNSecureStorageStatic
 
   export interface RNSecureStorageStatic {
     /**
+     * Set a value from secure storage.
+     */
+    setItem(key: string, value: string, options: SetOptions): Promise<string | null>
+    /**
      * Get a value from secure storage.
      */
-    get(key: string): Promise<string | null>;
+    getItem(key: string): Promise<string | null>
     /**
      * Checks if a key has been set.
      */
-    exists(key: string): Promise<boolean | null>;
+    exist(key: string): Promise<boolean | null>
     /**
-     * Set a value from secure storage.
+     * Get all setted keys from secure storage.
      */
-    set(
-      key: string,
-      value: string,
-      options: SetOptions
-    ): Promise<string | null>;
+    getAllKeys(): Promise<string[] | null>
+    /**
+     * Get all setted keys from secure storage.
+     */
+    multiGet(keys: string[]): Promise<string[] | null>
+    /**
+     * Multiple key pair set for secure storage
+     */
+    multiSet(pairs: Array<[string, string]>): Promise<string[] | null>
     /**
      * Remove a value from secure storage.
      */
-    remove(key: string): Promise<string | null>;
+    removeItem(key: string): Promise<string | null>
+    /**
+     * Remove a value from secure storage.
+     */
+    multiRemove(keys: string[]): Promise<string | null>
+    /**
+     * Removes whole RNSecureStorage data
+     */
+    clear(): Promise<string | null>
   }
 
-  export default RNSecureStorage;
+  export default RNSecureStorage
 }

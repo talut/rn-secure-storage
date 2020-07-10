@@ -44,8 +44,9 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
 
 ```javascript
   // {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This is only for IOS
-  const storeItem = () => {
-    RNSecureStorage.set("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
+ 
+  const setItem = () => {
+    RNSecureStorage.setItem("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
       .then(res => {
         console.log(res)
       })
@@ -55,7 +56,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const getItem = () => {
-    RNSecureStorage.get("token")
+    RNSecureStorage.getItem("token")
       .then(res => {
         console.log(res)
       })
@@ -65,7 +66,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const removeItem = () => {
-    RNSecureStorage.remove("token")
+    RNSecureStorage.removeItem("token")
       .then(res => {
         console.log(res)
       })
@@ -75,7 +76,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const removeAll = () => {
-    RNSecureStorage.removeAll()
+    RNSecureStorage.clear()
       .then(res => {
         console.log(res)
       })
@@ -85,9 +86,13 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const itemExist = () => {
-    RNSecureStorage.exist("token").then(res => {
-      console.log(res)
-    })
+    RNSecureStorage.exist("token")
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   const getAllKeys = () => {
@@ -100,8 +105,11 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
       })
   }
 
-  const multiGet = () => {
-    RNSecureStorage.multiGet(["token","password","email"])
+  const multiSet = () => {
+    const pair_one = ["@idToken", "id_token_value"]
+    const pair_two = ["@accessToken", "access_token_value"]
+    const pair_three = ["@refreshToken", "refresh_token_value"]
+    RNSecureStorage.multiSet([pair_one, pair_two, pair_three])
       .then(res => {
         console.log(res)
       })
@@ -109,6 +117,28 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
         console.log(err)
       })
   }
+
+  const multiGet = () => {
+    RNSecureStorage.multiGet(["@idToken", "@accessToken", "@refreshToken"])
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  const multiRemove = () => {
+    RNSecureStorage.multiRemove(["@idToken", "@accessToken", "@refreshToken"])
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+
 ```
 
 
