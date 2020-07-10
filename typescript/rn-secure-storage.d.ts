@@ -1,4 +1,4 @@
-// Type definitions for rn-secure-storage 3.0.0
+// Type definitions for rn-secure-storage 2.5.0
 // Project: https://github.com/akiver/rn-secure-storage
 // Definitions by: Talut TASGIRAN <https://github.com/talut>
 // TypeScript Version: 2.8
