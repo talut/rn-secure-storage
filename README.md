@@ -29,7 +29,7 @@ yarn add rn-secure-storage
 ```
 
 
-### Version 2.5.0
+### Version 3.0.0
 - IOS part rewrote with Swift.
 - Get all keys feature added.
 - Remove all stored values feature added.
