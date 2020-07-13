@@ -1,7 +1,7 @@
 // Type definitions for rn-secure-storage 3.0.0
 // Project: https://github.com/akiver/rn-secure-storage
 // Definitions by: Talut TASGIRAN <https://github.com/talut>
-// TypeScript Version: 2.8
+// TypeScript Version: 3.9.6
 
 declare module "rn-secure-storage" {
   export enum ACCESSIBLE {

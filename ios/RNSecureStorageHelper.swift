@@ -5,8 +5,6 @@
 
 import Foundation
 
-// TODO: Add keychain share
-
 class RNSecureStorageHelper {
   let appBundleName = Bundle.main.bundleIdentifier!
 
