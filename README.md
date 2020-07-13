@@ -47,6 +47,11 @@ yarn add rn-secure-storage
  import { Button, SafeAreaView, ScrollView, StatusBar } from "react-native"
  import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage"
  const App = () => {
+
+
+    /**
+     * Set a value from secure storage.
+     */
   const setItem = () => {
     RNSecureStorage.setItem("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
       .then(res => {
@@ -56,7 +61,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+    /**
+     * Get a value from secure storage.
+     */
   const getItem = () => {
     RNSecureStorage.getItem("token")
       .then(res => {
@@ -66,7 +73,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+    /**
+     * Remove a value from secure storage.
+     */
   const removeItem = () => {
     RNSecureStorage.removeItem("token")
       .then(res => {
@@ -76,7 +85,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+   /**
+     * Removes whole RNSecureStorage data (On error will return unremoved keys)
+     */
   const removeAll = () => {
     RNSecureStorage.clear()
       .then(res => {
@@ -86,7 +97,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+   /**
+     * Checks if a key has been set.
+     */
   const itemExist = () => {
     RNSecureStorage.exist("@refreshToken")
       .then(res => {
@@ -96,7 +109,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+   /**
+     * Get all setted keys from secure storage.
+     */
   const getAllKeys = () => {
     RNSecureStorage.getAllKeys()
       .then(res => {
@@ -106,7 +121,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+   /**
+     * Multiple key pair set for secure storage
+     */
   const multiSet = () => {
     const pair_one = ["@idToken", "id_token_value"]
     const pair_two = ["@accessToken", "access_token_value"]
@@ -119,7 +136,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+ /**
+     * Get multiple values from secure storage.
+     */
   const multiGet = () => {
     RNSecureStorage.multiGet(["@idToken", "@accessToken", "@refreshToken"])
       .then(res => {
@@ -129,7 +148,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+    /**
+     * Remove values from secure storage (On error will return unremoved keys)
+     */
   const multiRemove = () => {
     RNSecureStorage.multiRemove(["@refreshToken", "token"])
       .then(res => {
@@ -139,7 +160,9 @@ yarn add rn-secure-storage
         console.log(err)
       })
   }
-
+   /**
+     * Get supported biometry type (Will return FaceID, TouchID or undefined)
+     */
   const getSupportedBiometryType = () => {
     RNSecureStorage.getSupportedBiometryType()
       .then(res => {
