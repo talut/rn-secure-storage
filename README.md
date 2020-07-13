@@ -38,9 +38,7 @@ yarn add rn-secure-storage
 ##### [Version 2.0.4](./README-v2.0.4.md)
 
 
-```javascript
-import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
-```
+### Usage
 
 ```javascript
 
