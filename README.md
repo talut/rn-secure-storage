@@ -43,8 +43,12 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
 ```
 
 ```javascript
-  // {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This is only for IOS
- 
+
+ // {accessible: ACCESSIBLE.WHEN_UNLOCKED} -> This is only for IOS
+ import React from "react"
+ import { Button, SafeAreaView, ScrollView, StatusBar } from "react-native"
+ import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage"
+ const App = () => {
   const setItem = () => {
     RNSecureStorage.setItem("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
       .then(res => {
@@ -86,7 +90,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const itemExist = () => {
-    RNSecureStorage.exist("token")
+    RNSecureStorage.exist("@refreshToken")
       .then(res => {
         console.log(res)
       })
@@ -109,7 +113,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
     const pair_one = ["@idToken", "id_token_value"]
     const pair_two = ["@accessToken", "access_token_value"]
     const pair_three = ["@refreshToken", "refresh_token_value"]
-    RNSecureStorage.multiSet([pair_one, pair_two, pair_three])
+    RNSecureStorage.multiSet([pair_one, pair_two, pair_three], { accessible: ACCESSIBLE.WHEN_UNLOCKED })
       .then(res => {
         console.log(res)
       })
@@ -129,7 +133,7 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
   }
 
   const multiRemove = () => {
-    RNSecureStorage.multiRemove(["@idToken", "@accessToken", "@refreshToken"])
+    RNSecureStorage.multiRemove(["@refreshToken", "token"])
       .then(res => {
         console.log(res)
       })
@@ -138,6 +142,35 @@ import RNSecureStorage, { ACCESSIBLE } from 'rn-secure-storage'
       })
   }
 
+  const getSupportedBiometryType = () => {
+    RNSecureStorage.getSupportedBiometryType()
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  return (
+      <SafeAreaView>
+        <ScrollView>
+          <Button title="Store Item" onPress={setItem} />
+          <Button title="Get Item" onPress={getItem} />
+          <Button title="Remove Item" onPress={removeItem} />
+          <Button title="Remove All" onPress={removeAll} />
+          <Button title="Is Item Exist?" onPress={itemExist} />
+          <Button title="Get All Keys" onPress={getAllKeys} />
+          <Button title="Multiple Set" onPress={multiSet} />
+          <Button title="Multiple Get" onPress={multiGet} />
+          <Button title="Multiple Remove" onPress={multiRemove} />
+          <Button title="Get Supported Biometry Type" onPress={getSupportedBiometryType} />
+        </ScrollView>
+      </SafeAreaView>
+  )
+}
+
+export default App
 
 ```
 

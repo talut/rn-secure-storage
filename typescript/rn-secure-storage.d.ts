@@ -76,23 +76,27 @@ declare module "rn-secure-storage" {
      */
     getAllKeys(): Promise<string[] | null>
     /**
-     * Get all setted keys from secure storage.
-     */
-    multiGet(keys: string[]): Promise<string[] | null>
-    /**
      * Multiple key pair set for secure storage
      */
-    multiSet(pairs: Array<[string, string]>): Promise<string[] | null>
+    multiSet(pairs: Array<[string, string]>, options: SetOptions): Promise<string[] | null>
+    /**
+     * Get multiple values from secure storage.
+     */
+    multiGet(keys: string[]): Promise<string[] | null>
     /**
      * Remove a value from secure storage.
      */
     removeItem(key: string): Promise<string | null>
     /**
-     * Remove a value from secure storage.
+     * Remove values from secure storage (On error will return unremoved keys)
      */
     multiRemove(keys: string[]): Promise<string | null>
     /**
-     * Removes whole RNSecureStorage data
+     * Get supported biometry type (Will return FaceID, TouchID or undefined)
+     */
+    getSupportedBiometryType(): Promise<string | null>
+    /**
+     * Removes whole RNSecureStorage data (On error will return unremoved keys)
      */
     clear(): Promise<string | null>
   }

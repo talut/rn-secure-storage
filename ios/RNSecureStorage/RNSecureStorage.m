@@ -32,7 +32,7 @@ RCT_EXTERN_METHOD(getAllKeys:(RCTPromiseResolveBlock *)resolver rejecter:(RCTPro
 /**
  * Multiple key pair set for secure storage
  */
-RCT_EXTERN_METHOD(multiSet:(NSArray *)keyValuePair resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(multiSet:(NSArray *)keyValuePairs options:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)reject)
 
 /**
  * Get multiple values from secure storage.
@@ -46,13 +46,18 @@ RCT_EXTERN_METHOD(removeItem:(NSString *)key resolver:(RCTPromiseResolveBlock)re
 
 /**
    * Remove values from secure storage
-   */
+*/
 RCT_EXTERN_METHOD(multiRemove:(NSArray *)keys resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)reject)
 
 /**
-   * Removes whole secure storage data
-   */
+   Remove all stored keys. (On error will return unremoved keys)
+*/
 RCT_EXTERN_METHOD(clear:(RCTPromiseResolveBlock *)resolver rejecter:(RCTPromiseRejectBlock)reject)
+
+/**
+  Get supported biometry type
+*/
+RCT_EXTERN_METHOD(getSupportedBiometryType: (RCTPromiseResolveBlock *)resolver rejecter:(RCTPromiseRejectBlock *)reject)
 
 
 + (BOOL)requiresMainQueueSetup
