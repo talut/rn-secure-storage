@@ -13,7 +13,6 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "10.0", :tvos => "9.2", :osx => "10.14" }
 
   s.source       = { :git => "https://github.com/talut/rn-secure-storage.git", :tag => "v#{s.version}" }
-  s.source_files  = "ios/**/*.{h,m}"
-  s.xcconfig = { 'SWIFT_OBJC_BRIDGING_HEADER' => '${POD_ROOT}/RNSecureStorage-Bridging-Header.h' }
+  s.source_files  = "ios/**/*.{h,m,swift}"
   s.dependency 'React'
 end

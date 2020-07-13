@@ -1,8 +1,6 @@
 //
 //  RNSecureStorageHelper.swift
-//
 //  Created by Talut TASGIRAN on 10.03.2020.
-//  Copyright © 2020 Facebook. All rights reserved.
 //
 
 import Foundation
@@ -11,7 +9,7 @@ import Foundation
 
 class RNSecureStorageHelper {
   let appBundleName = Bundle.main.bundleIdentifier!
-  
+
   /*
    Store an item in keychain.
    */
@@ -25,37 +23,37 @@ class RNSecureStorageHelper {
       kSecValueData as String   : valData!,
       kSecAttrAccessible as String: self.accessibleValue(accessible: accessible)
     ]
-    
+
     SecItemDelete(query as CFDictionary)
-    
+
     let status = SecItemAdd(query as CFDictionary, nil)
-    
+
     return status == errSecSuccess
-    
+
   }
-  
+
   /*
    Get value from keychain by key.
    */
   func getKeychainValue(key: String) -> Data?  {
     let keyData = appBundleName+"."+key
     let tag = keyData.data(using: .utf8)!
-    
+
     let query: [String : Any] = [
       kSecClass as String: kSecClassKey,
       kSecAttrApplicationTag as String: tag,
       kSecReturnData as String:  kCFBooleanTrue!,
     ]
     var dataTypeRef: AnyObject? = nil
-    
+
     let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
-    
+
     if status == noErr {
       return dataTypeRef as! Data?
     } else {
       return nil
     }
-    
+
   }
   /*
    Check if key exist in keychain.
@@ -63,19 +61,19 @@ class RNSecureStorageHelper {
   func keychainValueExist(key: String) -> Bool  {
     let keyData = appBundleName+"."+key
     let tag = keyData.data(using: .utf8)!
-    
+
     let query: [String : Any] = [
       kSecClass as String: kSecClassKey,
       kSecAttrApplicationTag as String: tag,
       kSecReturnData as String:  kCFBooleanTrue!,
     ]
-    
+
     let status = SecItemCopyMatching(query as CFDictionary, nil)
-    
+
     return status == errSecSuccess
-    
+
   }
-  
+
   /*
    Get all stored keys from keychain.
    */
@@ -87,16 +85,16 @@ class RNSecureStorageHelper {
       kSecReturnAttributes as String : kCFBooleanTrue!,
       kSecMatchLimit as String: kSecMatchLimitAll
     ]
-    
+
     var result: AnyObject? = nil
-    
+
     let lastResultCode = withUnsafeMutablePointer(to: &result) {
       SecItemCopyMatching(query as CFDictionary, UnsafeMutablePointer($0))
     }
-    
+
     if lastResultCode == noErr {
       let array = result as? Array<Dictionary<String, Any>>
-      
+
       for item in array! {
         let key = item[kSecAttrApplicationTag as String]
         let replaceKey = String(data:key as! Data, encoding: .utf8)!
@@ -104,11 +102,11 @@ class RNSecureStorageHelper {
         keys.append(result)
       }
     }
-    
+
     return keys
-    
+
   }
-  
+
   /*
    Set multiple values from keychain with keys
    */
@@ -122,8 +120,8 @@ class RNSecureStorageHelper {
     }
     return settedPairs == keyValuePairs.count
   }
-  
-  
+
+
   /*
    Get multiple values from keychain with keys
    */
@@ -138,23 +136,23 @@ class RNSecureStorageHelper {
     }
     return values
   }
-  
+
   /*
    Remove keychain item.
    */
   func removeKeychainValue(key: String) -> Bool {
     let keyData = appBundleName+"."+key
     let tag = keyData.data(using: .utf8)!
-    
+
     let query: [String : Any] = [
       kSecClass as String: kSecClassKey,
       kSecAttrApplicationTag as String: tag,
       kSecReturnData as String:  kCFBooleanTrue!,
     ]
-    
+
     return SecItemDelete(query as CFDictionary) == errSecSuccess
   }
-  
+
   /*
    Multi remove keychain item.
    */
@@ -168,7 +166,7 @@ class RNSecureStorageHelper {
       }
    return unremovedKeys
   }
-  
+
   /*
    Clear all stored keys
    */
@@ -181,16 +179,16 @@ class RNSecureStorageHelper {
       kSecReturnAttributes as String : kCFBooleanTrue!,
       kSecMatchLimit as String: kSecMatchLimitAll
     ]
-    
+
     var result: AnyObject? = nil
-    
+
     let lastResultCode = withUnsafeMutablePointer(to: &result) {
       SecItemCopyMatching(query as CFDictionary, UnsafeMutablePointer($0))
     }
-    
+
     if lastResultCode == noErr {
       let array = result as? Array<Dictionary<String, Any>>
-      
+
       for item in array! {
         let key = item[kSecAttrApplicationTag as String]
         let replaceKey = String(data:key as! Data, encoding: .utf8)!
@@ -198,7 +196,7 @@ class RNSecureStorageHelper {
         keys.append(result)
       }
     }
-    
+
     for key in keys {
       let status  = self.removeKeychainValue(key: key)
       if !status {
@@ -207,9 +205,9 @@ class RNSecureStorageHelper {
     }
     return unremovedKeys
   }
-  
+
   func accessibleValue(accessible: String) -> CFString {
-    
+
     let list = [
       "AccessibleWhenUnlocked": kSecAttrAccessibleWhenUnlocked,
       "AccessibleAfterFirstUnlock": kSecAttrAccessibleAfterFirstUnlock,
@@ -219,10 +217,10 @@ class RNSecureStorageHelper {
       "AccessibleAfterFirstUnlockThisDeviceOnly": kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
       "AccessibleAlwaysThisDeviceOnly": kSecAttrAccessibleAlwaysThisDeviceOnly
     ]
-    
+
     return list[accessible]!
-    
+
   }
-  
-  
+
+
 }

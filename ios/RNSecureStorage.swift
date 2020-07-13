@@ -1,6 +1,5 @@
 //
 //  RNSecureStorage.swift
-//
 //  Created by Talut TASGIRAN on 10.07.2020.
 //
 import Foundation
@@ -12,7 +11,7 @@ class RNSecureStorage: NSObject {
   let kBiometryTypeTouchID = "TouchID"
   let kBiometryTypeFaceID = "FaceID"
   let helper = RNSecureStorageHelper.init()
-  
+
   enum RNSecureErrors: Error {
     case keyNotStored
     case keyNotPresent
@@ -23,7 +22,7 @@ class RNSecureStorage: NSObject {
     case anErrorOccured
     case unknown
   }
-  
+
   @objc(setItem:value:options:resolver:rejecter:)
   func setItem(_ key:String, value:String, options:[String:Any], resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
     let accessible = options["accessible"] as! String
@@ -34,7 +33,7 @@ class RNSecureStorage: NSObject {
       rejecter("keyNotStored","RNSecureStorage: An error occurred during key storage", RNSecureErrors.keyNotStored)
     }
   }
-  
+
   @objc(getItem:resolver:rejecter:)
   func getItem(_ key:String, resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
     let val = helper.getKeychainValue(key: key)
@@ -45,25 +44,25 @@ class RNSecureStorage: NSObject {
       resolver(result)
     }
   }
-  
+
   @objc(exist:resolver:rejecter:)
   func exist(_ key:String, resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
     let val = helper.keychainValueExist(key: key)
     resolver(val)
   }
-  
+
   @objc(getAllKeys:rejecter:)
   func getAllKeys(_ resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
-    
+
     let keys = helper.getAllKeychainKeys()
-    
+
     if keys.count > 0 {
       resolver(keys)
     }else{
       rejecter("thereAreNoKeys","RNSecureStorage: There are no stored keys.", RNSecureErrors.thereAreNoKeys)
     }
   }
-  
+
   @objc(multiSet:options:resolver:rejecter:)
   func multiSet(_ keyValuePairs:[[String]], options:[String:Any], resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
     let accessible = options["accessible"] as! String
@@ -74,7 +73,7 @@ class RNSecureStorage: NSObject {
       rejecter("keyNotStored","RNSecureStorage: An error occurred during key storage", RNSecureErrors.keyNotStored)
     }
   }
-  
+
   /*
    Multi get values by keys array.
    */
@@ -87,7 +86,7 @@ class RNSecureStorage: NSObject {
       rejecter("anErrorOccured","RNSecureStorage: An error occurred during multi getting values.", RNSecureErrors.anErrorOccured)
     }
   }
-  
+
   @objc(removeItem:resolver:rejecter:)
   func removeItem(_ key:String, resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
     let status = helper.removeKeychainValue(key: key)
@@ -97,7 +96,7 @@ class RNSecureStorage: NSObject {
       rejecter("keyNotStored","RNSecureStorage: An error occurred during key remove", RNSecureErrors.keyNotRemoved)
     }
   }
-  
+
   /*
    Clear all given keys. (On error will return unremoved keys)
    */
@@ -110,8 +109,8 @@ class RNSecureStorage: NSObject {
       resolver("Keys removed successfully")
     }
   }
-  
-  
+
+
   /*
    Clear all stored keys. (On error will return unremoved keys)
    */
@@ -123,7 +122,7 @@ class RNSecureStorage: NSObject {
     }else{
       resolver("All stored keys removed.")
     }
-    
+
   }
   /*
    Get supported biometry type
@@ -132,7 +131,7 @@ class RNSecureStorage: NSObject {
   func getSupportedBiometryType(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     var error: NSError?
     let canEvaluatePolicy = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
-    
+
     if error==nil && canEvaluatePolicy {
       if #available(iOS 11.0, *) {
         if LAContext().biometryType == LABiometryType.faceID{
@@ -143,5 +142,5 @@ class RNSecureStorage: NSObject {
     }
     return resolve(nil)
   }
-  
+
 }
