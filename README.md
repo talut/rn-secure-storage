@@ -35,7 +35,7 @@ yarn add rn-secure-storage
 - Remove all stored values feature added.
 - Multi getting values by keys feature added.
 
-### [Version 2.0.4](./README-v2.0.4.md)
+##### [Version 2.0.4](./README-v2.0.4.md)
 
 
 ```javascript
