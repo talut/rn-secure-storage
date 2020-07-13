@@ -4,7 +4,7 @@
   "description": "Secure Storage for React Native (Android & iOS) - Keychain & Keystore",
   "publishConfig": {"registry": "https://npm.pkg.github.com/@talut"},
   "main": "index.js",
-  "types": "typescript/rn-secure-storage.d.ts",
+  "types": "rn-secure-storage.d.ts",
   "keywords": [
     "react-native",
     "ios",
