@@ -60,7 +60,7 @@ declare module "rn-secure-storage" {
 
   export interface RNSecureStorageStatic {
     /**
-     * Set a value from secure storage.
+     * Set a value.
      */
     setItem(key: string, value: string, options: SetOptions): Promise<string | null>
     /**
@@ -92,7 +92,7 @@ declare module "rn-secure-storage" {
      */
     multiRemove(keys: string[]): Promise<string | null>
     /**
-     * Get supported biometry type (Will return FaceID, TouchID or undefined)
+     * Get supported biometry type (Will return FaceID, TouchID, Fingerprint, Iris, Face or undefined/null)
      */
     getSupportedBiometryType(): Promise<string | null>
     /**
