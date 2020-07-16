@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 
+import java.util.Map;
+
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class PrefsStorage {
     public static final String RN_SECURE_STORAGE = "RN_SECURE_STORAGE";
@@ -30,10 +32,10 @@ public class PrefsStorage {
 
     }
 
-    public void storeEncryptedEntry(@NonNull final String key, @NonNull final String value) {
-        prefs.edit()
+    public boolean storeEncryptedEntry(@NonNull final String key, @NonNull final String value) {
+        return prefs.edit()
                 .putString(key, value)
-                .apply();
+                .commit();
     }
 
     public String getEncryptedEntry(@NonNull final String key) {
@@ -46,5 +48,9 @@ public class PrefsStorage {
 
     public boolean clear() {
         return this.prefs.edit().clear().commit();
+    }
+
+    public Map<String, ?> getAllStoredKeys() {
+        return this.prefs.getAll();
     }
 }

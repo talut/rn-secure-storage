@@ -12,10 +12,21 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import static com.taluttasgiran.rnsecurestorage.Constants.FACE_SUPPORTED_NAME;
 import static com.taluttasgiran.rnsecurestorage.Constants.FINGERPRINT_SUPPORTED_NAME;
@@ -33,8 +44,12 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setItem(String key, String value, @Nullable ReadableMap options, Promise promise) {
         try {
-            this.rnSecureStorage.setValueByKey(key, value);
-            promise.resolve("Key stored");
+            boolean status = this.rnSecureStorage.setValueByKey(key, value);
+            if (status) {
+                promise.resolve("Key stored");
+            } else {
+                promise.reject("", "");
+            }
         } catch (Exception e) {
             promise.reject(e);
         }
@@ -61,6 +76,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multiSet(ReadableArray keyValuePairs, @Nullable ReadableMap options, Promise promise) {
+        ArrayList<String> unsettedPairs = new ArrayList<>();
         if (keyValuePairs.size() > 0) {
             final int size = keyValuePairs.size();
             for (int i = 0; i < size; i++) {
@@ -77,9 +93,17 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                     } catch (KeyChainException | CryptoInitializationException | IOException e) {
                         promise.reject("", "");
                     }
+                } else {
+                    if (keyValuePair.getString(0) != null) {
+                        unsettedPairs.add(keyValuePair.getString(0));
+                    }
                 }
             }
-            promise.resolve("All keys setted");
+            if (unsettedPairs.size() > 0) {
+                promise.resolve(String.valueOf(new JSONArray(unsettedPairs)));
+            } else {
+                promise.resolve("All keys setted");
+            }
         } else {
             promise.reject("", "");
         }
@@ -93,18 +117,31 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             for (int i = 0; i < size; i++) {
                 String key = keys.getString(i);
                 if (key != null) {
-                    String value = this.rnSecureStorage.getValueByKey(key);
+                    String value = null;
+                    try {
+                        value = this.rnSecureStorage.getValueByKey(key);
+                    } catch (IOException | CryptoInitializationException | KeyChainException | InvalidAlgorithmParameterException | BadPaddingException | NoSuchPaddingException | NoSuchProviderException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException ignored) {
+                    }
                     if (value != null) {
                         keyValueList.put(key, value);
                     }
                 }
             }
             if (keyValueList.size() > 0) {
-                promise.resolve(String.valueOf(keyValueList));
+                promise.resolve(String.valueOf(new JSONObject(keyValueList)));
             } else {
-                promise.resolve(null);
+                promise.reject("", "");
             }
         } else {
+            promise.reject("", "");
+        }
+    }
+
+    @ReactMethod
+    public void getAllKeys(Promise promise) {
+        try {
+            promise.resolve(String.valueOf(this.rnSecureStorage.getAllKeys()));
+        } catch (Exception e) {
             promise.reject("", "");
         }
     }
@@ -152,7 +189,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 }
             }
             if (unremovedKeys.size() > 0) {
-                promise.resolve(String.valueOf(unremovedKeys));
+                promise.resolve(String.valueOf(new JSONArray(unremovedKeys)));
             } else {
                 promise.resolve("All keys removed");
             }

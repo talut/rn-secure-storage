@@ -7,19 +7,33 @@ import androidx.annotation.NonNull;
 
 import com.facebook.crypto.exception.CryptoInitializationException;
 import com.facebook.crypto.exception.KeyChainException;
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.taluttasgiran.rnsecurestorage.cipher.CipherStorageFacebookConceal;
+import com.taluttasgiran.rnsecurestorage.cipher.CipherStorageKeystore;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static com.taluttasgiran.rnsecurestorage.Constants.FACE_SUPPORTED_NAME;
-import static com.taluttasgiran.rnsecurestorage.Constants.FINGERPRINT_SUPPORTED_NAME;
-import static com.taluttasgiran.rnsecurestorage.Constants.IRIS_SUPPORTED_NAME;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import static com.taluttasgiran.rnsecurestorage.RNSecureStorageModule.RN_SECURE_STORAGE;
 
 public class RNSecureStorage {
     CipherStorageFacebookConceal cipherStorageFacebookConceal;
+    CipherStorageKeystore cipherStorageKeystore;
     ReactApplicationContext mContext;
     PrefsStorage prefsStorage;
 
@@ -31,10 +45,10 @@ public class RNSecureStorage {
 
 
     private void initialize() {
-        if (!shouldUseConceal()) {
-            cipherStorageFacebookConceal = new CipherStorageFacebookConceal(this.mContext);
+        if (shouldUseConceal()) {
+            this.cipherStorageFacebookConceal = new CipherStorageFacebookConceal(this.mContext);
         } else {
-            Log.d(RN_SECURE_STORAGE, "In development");
+            this.cipherStorageKeystore = new CipherStorageKeystore(RN_SECURE_STORAGE);
         }
     }
 
@@ -42,53 +56,47 @@ public class RNSecureStorage {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
-    public void setValueByKey(@NonNull String key, @NonNull String value) throws KeyChainException, CryptoInitializationException, IOException {
-        if (!shouldUseConceal()) {
-            this.prefsStorage.storeEncryptedEntry(key, this.cipherStorageFacebookConceal.encrypt(key, value));
+    public boolean setValueByKey(@NonNull String key, @NonNull String value) throws KeyChainException, CryptoInitializationException, IOException {
+        if (shouldUseConceal()) {
+            return this.prefsStorage.storeEncryptedEntry(key, this.cipherStorageFacebookConceal.encrypt(key, value));
         } else {
-            Log.d(RN_SECURE_STORAGE, "In development");
+            try {
+                String encryptValue = this.cipherStorageKeystore.encrypt(value);
+                return this.prefsStorage.storeEncryptedEntry(key, encryptValue);
+            } catch (InvalidAlgorithmParameterException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | BadPaddingException | IllegalBlockSizeException e) {
+                return false;
+            }
         }
     }
 
-    public String getValueByKey(@NonNull String key) {
-        if (!shouldUseConceal()) {
-            String encryptedEntry = this.prefsStorage.getEncryptedEntry(key);
-            try {
+    public String getValueByKey(@NonNull String key) throws KeyChainException, CryptoInitializationException, IOException, BadPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+        String encryptedEntry = this.prefsStorage.getEncryptedEntry(key);
+        if (encryptedEntry != null) {
+            if (shouldUseConceal()) {
                 return this.cipherStorageFacebookConceal.decrypt(key, encryptedEntry);
-            } catch (Exception e) {
-                return null;
+            } else {
+                return this.cipherStorageKeystore.decrypt(encryptedEntry);
             }
         } else {
-            Log.d(RN_SECURE_STORAGE, "In development");
             return null;
         }
     }
 
     public boolean removeValueByKey(@NonNull String key) {
-        if (!shouldUseConceal()) {
-            return this.prefsStorage.removeEntry(key);
-        } else {
-            Log.d(RN_SECURE_STORAGE, "In development");
-            return false;
-        }
+        return this.prefsStorage.removeEntry(key);
     }
 
     public boolean existByKey(@NonNull String key) {
-        if (!shouldUseConceal()) {
-            return this.prefsStorage.exist(key);
-        } else {
-            Log.d(RN_SECURE_STORAGE, "In development");
-            return false;
-        }
+        return this.prefsStorage.exist(key);
+    }
+
+    public JSONArray getAllKeys() {
+        List<String> list = new ArrayList<>(this.prefsStorage.getAllStoredKeys().keySet());
+        return new JSONArray(list);
     }
 
     public boolean clear() {
-        if (!shouldUseConceal()) {
-            return this.prefsStorage.clear();
-        } else {
-            Log.d(RN_SECURE_STORAGE, "In development");
-            return false;
-        }
+        return this.prefsStorage.clear();
     }
 
 }
