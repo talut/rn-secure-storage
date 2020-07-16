@@ -1,78 +1,185 @@
 package com.taluttasgiran.rnsecurestorage;
 
+import android.os.Build;
+import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 
-import com.facebook.crypto.exception.CryptoInitializationException;
-import com.facebook.crypto.exception.KeyChainException;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.taluttasgiran.rnsecurestorage.PrefsStorage.ResultSet;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorage;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorage.DecryptionResult;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorage.DecryptionResultHandler;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageFacebookConceal;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageKeystoreAesCbc;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageKeystoreRsaEcb;
+import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageKeystoreRsaEcb.NonInteractiveHandler;
+import com.taluttasgiran.rnsecurestorage.exceptions.CryptoFailedException;
+import com.taluttasgiran.rnsecurestorage.exceptions.EmptyParameterException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
-import static com.taluttasgiran.rnsecurestorage.Constants.FACE_SUPPORTED_NAME;
-import static com.taluttasgiran.rnsecurestorage.Constants.FINGERPRINT_SUPPORTED_NAME;
-import static com.taluttasgiran.rnsecurestorage.Constants.IRIS_SUPPORTED_NAME;
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
+    //region Constants
     public static final String RN_SECURE_STORAGE = "RNSecureStorage";
-    RNSecureStorage rnSecureStorage;
+    public static final String RN_SECURE_STORAGE_ALIAS = "RNSecureStorageAlias";
+    public static final String FINGERPRINT_SUPPORTED_NAME = "Fingerprint";
+    public static final String FACE_SUPPORTED_NAME = "Face";
+    public static final String IRIS_SUPPORTED_NAME = "Iris";
 
-    RNSecureStorageModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        rnSecureStorage = new RNSecureStorage(getReactApplicationContext());
+    /**
+     * Options mapping keys.
+     */
+    @interface Maps {
+        String SECURITY_LEVEL = "securityLevel";
+        String STORAGE = "storage";
     }
 
+    /**
+     * Known error codes.
+     */
+    @interface Errors {
+        String E_EMPTY_PARAMETERS = "E_EMPTY_PARAMETERS";
+        String E_CRYPTO_FAILED = "E_CRYPTO_FAILED";
+        String E_SUPPORTED_BIOMETRY_ERROR = "E_SUPPORTED_BIOMETRY_ERROR";
+        /**
+         * Raised for unexpected errors.
+         */
+        String E_UNKNOWN_ERROR = "E_UNKNOWN_ERROR";
+    }
+
+    /**
+     * Supported ciphers.
+     */
+    @StringDef({KnownCiphers.FB, KnownCiphers.AES, KnownCiphers.RSA})
+    public @interface KnownCiphers {
+        /**
+         * Facebook conceal compatibility lib in use.
+         */
+        String FB = "FacebookConceal";
+        /**
+         * AES encryption.
+         */
+        String AES = "KeystoreAESCBC";
+        /**
+         * Biometric + RSA.
+         */
+        String RSA = "KeystoreRSAECB";
+    }
+
+    //region Members
+    /**
+     * Name-to-instance lookup  map.
+     */
+    private final Map<String, CipherStorage> cipherStorageMap = new HashMap<>();
+    /**
+     * Shared preferences storage.
+     */
+    private final PrefsStorage prefsStorage;
+    //endregion
+
+    //region Initialization
+
+    /**
+     * Default constructor.
+     */
+    public RNSecureStorageModule(@NonNull final ReactApplicationContext reactContext) {
+        super(reactContext);
+        prefsStorage = new PrefsStorage(reactContext);
+
+        addCipherStorageToMap(new CipherStorageFacebookConceal(reactContext));
+        addCipherStorageToMap(new CipherStorageKeystoreAesCbc());
+
+        // we have a references to newer api that will fail load of app classes in old androids OS
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            addCipherStorageToMap(new CipherStorageKeystoreRsaEcb());
+        }
+    }
+
+    //region Overrides
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NonNull
+    public String getName() {
+        return RN_SECURE_STORAGE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NonNull
+    @Override
+    public Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<>();
+
+        constants.put(SecurityLevel.ANY.jsName(), SecurityLevel.ANY.name());
+        constants.put(SecurityLevel.SECURE_SOFTWARE.jsName(), SecurityLevel.SECURE_SOFTWARE.name());
+        constants.put(SecurityLevel.SECURE_HARDWARE.jsName(), SecurityLevel.SECURE_HARDWARE.name());
+
+        return constants;
+    }
+    //endregion
+
+    //region React Methods
+
     @ReactMethod
-    public void setItem(String key, String value, @Nullable ReadableMap options, Promise promise) {
+    protected void setItem(@NonNull final String key, @NonNull final String value, @Nullable final ReadableMap options, @NonNull final Promise promise) {
         try {
-            boolean status = this.rnSecureStorage.setValueByKey(key, value);
-            if (status) {
-                promise.resolve("Key stored");
-            } else {
-                promise.reject("", "");
-            }
-        } catch (Exception e) {
-            promise.reject(e);
+            setValueWithKey(key, value);
+            promise.resolve("Key stored successfully");
+        } catch (EmptyParameterException e) {
+            Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
+
+            promise.reject(Errors.E_EMPTY_PARAMETERS, e);
+        } catch (CryptoFailedException e) {
+            Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
+
+            promise.reject(Errors.E_CRYPTO_FAILED, e);
+        } catch (Throwable fail) {
+            Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
+
+            promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
 
     @ReactMethod
-    public void getItem(String key, Promise promise) {
+    protected void getItem(@NonNull final String key, @NonNull final Promise promise) {
         try {
-            promise.resolve(this.rnSecureStorage.getValueByKey(key));
-        } catch (Exception e) {
-            promise.reject("Key not present", "");
+            promise.resolve(getValue(key));
+        } catch (CryptoFailedException e) {
+            Log.e(RN_SECURE_STORAGE, e.getMessage() != null ? e.getMessage() : "");
+            promise.reject(Errors.E_CRYPTO_FAILED, e);
+        } catch (Throwable fail) {
+            Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
+            promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
 
     @ReactMethod
     public void exist(String key, Promise promise) {
         try {
-            promise.resolve(this.rnSecureStorage.existByKey(key));
+            promise.resolve(this.prefsStorage.exist(key));
         } catch (Exception e) {
             promise.reject(e);
         }
     }
-
 
     @ReactMethod
     public void multiSet(ReadableArray keyValuePairs, @Nullable ReadableMap options, Promise promise) {
@@ -82,15 +189,17 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             for (int i = 0; i < size; i++) {
                 ReadableArray keyValuePair = keyValuePairs.getArray(i);
                 if (keyValuePair != null && keyValuePair.size() == 2) {
-                    try {
-                        String key = keyValuePair.getString(0);
-                        String value = keyValuePair.getString(1);
-                        if (key != null && value != null) {
-                            this.rnSecureStorage.setValueByKey(key, value);
-                        } else {
+                    String key = keyValuePair.getString(0);
+                    String value = keyValuePair.getString(1);
+                    if (key != null && value != null) {
+                        try {
+                            this.setValueWithKey(key, value);
+                        } catch (CryptoFailedException e) {
+                            promise.reject("", "");
+                        } catch (EmptyParameterException e) {
                             promise.reject("", "");
                         }
-                    } catch (KeyChainException | CryptoInitializationException | IOException e) {
+                    } else {
                         promise.reject("", "");
                     }
                 } else {
@@ -119,8 +228,8 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 if (key != null) {
                     String value = null;
                     try {
-                        value = this.rnSecureStorage.getValueByKey(key);
-                    } catch (IOException | CryptoInitializationException | KeyChainException | InvalidAlgorithmParameterException | BadPaddingException | NoSuchPaddingException | NoSuchProviderException | IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException ignored) {
+                        value = this.getValue(key);
+                    } catch (CryptoFailedException ignored) {
                     }
                     if (value != null) {
                         keyValueList.put(key, value);
@@ -140,7 +249,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getAllKeys(Promise promise) {
         try {
-            promise.resolve(String.valueOf(this.rnSecureStorage.getAllKeys()));
+            promise.resolve(String.valueOf(this.prefsStorage.getAllStoredKeys()));
         } catch (Exception e) {
             promise.reject("", "");
         }
@@ -149,7 +258,8 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void removeItem(String key, Promise promise) {
         try {
-            if (this.rnSecureStorage.removeValueByKey(key)) {
+            boolean status = this.prefsStorage.removeEntry(key);
+            if (status) {
                 promise.resolve("Removed successfully");
             } else {
                 promise.reject("", "");
@@ -158,21 +268,6 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
-
-
-    @ReactMethod
-    public void clear(Promise promise) {
-        try {
-            if (this.rnSecureStorage.clear()) {
-                promise.resolve("Removed successfully");
-            } else {
-                promise.reject("", "");
-            }
-        } catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
 
     @ReactMethod
     public void multiRemove(ReadableArray keys, Promise promise) {
@@ -182,7 +277,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             for (int i = 0; i < size; i++) {
                 String key = keys.getString(i);
                 if (key != null) {
-                    boolean status = this.rnSecureStorage.removeValueByKey(key);
+                    boolean status = this.prefsStorage.removeEntry(key);
                     if (!status) {
                         unremovedKeys.add(key);
                     }
@@ -199,26 +294,262 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getSupportedBiometryType(@NonNull Promise promise) {
-        String reply = null;
+    public void clear(Promise promise) {
         try {
-            if (DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFaceAuthAvailable(getReactApplicationContext())) {
-                reply = FACE_SUPPORTED_NAME;
-            } else if (DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isIrisAuthAvailable(getReactApplicationContext())) {
-                reply = IRIS_SUPPORTED_NAME;
-            } else if (DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFingerprintAuthAvailable(getReactApplicationContext())) {
-                reply = FINGERPRINT_SUPPORTED_NAME;
+            if (this.prefsStorage.clear()) {
+                promise.resolve("Removed successfully");
+            } else {
+                promise.reject("", "");
             }
-            promise.resolve(reply);
         } catch (Exception e) {
-            promise.reject(Constants.Errors.E_SUPPORTED_BIOMETRY_ERROR, e);
-        } catch (Throwable fail) {
-            promise.reject(Constants.Errors.E_UNKNOWN_ERROR, fail);
+            promise.reject(e);
         }
     }
 
-    @Override
-    public String getName() {
-        return RN_SECURE_STORAGE;
+    @ReactMethod
+    public void getSupportedBiometryType(@NonNull final Promise promise) {
+        try {
+            String reply = null;
+            if (isFaceAuthAvailable()) {
+                reply = FACE_SUPPORTED_NAME;
+            } else if (isIrisAuthAvailable()) {
+                reply = IRIS_SUPPORTED_NAME;
+            } else if (isFingerprintAuthAvailable()) {
+                reply = FINGERPRINT_SUPPORTED_NAME;
+            }
+
+            promise.resolve(reply);
+        } catch (Exception e) {
+            Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
+
+            promise.reject(Errors.E_SUPPORTED_BIOMETRY_ERROR, e);
+        } catch (Throwable fail) {
+            Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
+
+            promise.reject(Errors.E_UNKNOWN_ERROR, fail);
+        }
     }
+
+    //endregion
+
+    protected String getValue(@NonNull final String key) throws CryptoFailedException {
+        final ResultSet resultSet = prefsStorage.getEncryptedEntry(key);
+
+        if (resultSet == null) {
+            Log.e(RN_SECURE_STORAGE, "No entry found for service: " + RN_SECURE_STORAGE_ALIAS);
+            return null;
+        }
+        final CipherStorage current = getCipherStorageForCurrentAPILevel(false);
+        DecryptionResult decryptionResult = decryptToResult(RN_SECURE_STORAGE_ALIAS, current, resultSet);
+        return decryptionResult.value;
+    }
+
+    protected void setValueWithKey(@NonNull final String key,
+                                   @NonNull final String value) throws CryptoFailedException, EmptyParameterException {
+        throwIfEmptyParams(key, value);
+        final SecurityLevel level = getSecurityLevelOrDefault(null);
+        final CipherStorage storage = getSelectedStorage(null);
+
+        throwIfInsufficientLevel(storage, level);
+
+        final CipherStorage.EncryptionResult result = storage.encrypt(RN_SECURE_STORAGE_ALIAS, value, level);
+        prefsStorage.storeEncryptedEntry(key, result);
+    }
+
+    @NonNull
+    private CipherStorage getSelectedStorage(@Nullable final ReadableMap options)
+            throws CryptoFailedException {
+        final String cipherName = getSpecificStorageOrDefault(options);
+
+        CipherStorage result = null;
+
+        if (null != cipherName) {
+            result = getCipherStorageByName(cipherName);
+        }
+
+        // attempt to access none existing storage will force fallback logic.
+        if (null == result) {
+            result = getCipherStorageForCurrentAPILevel(false);
+        }
+
+        return result;
+    }
+
+    /**
+     * Extract user specified storage from options.
+     */
+    @KnownCiphers
+    @Nullable
+    private static String getSpecificStorageOrDefault(@Nullable final ReadableMap options) {
+        String storageName = null;
+
+        if (null != options && options.hasKey(Maps.STORAGE)) {
+            storageName = options.getString(Maps.STORAGE);
+        }
+
+        return storageName;
+    }
+
+    /**
+     * Get security level from options or fallback {@link SecurityLevel#ANY} value.
+     */
+    @NonNull
+    private static SecurityLevel getSecurityLevelOrDefault(@Nullable final ReadableMap options) {
+        return getSecurityLevelOrDefault(options, SecurityLevel.ANY.name());
+    }
+
+    /**
+     * Get security level from options or fallback to default value.
+     */
+    @NonNull
+    private static SecurityLevel getSecurityLevelOrDefault(@Nullable final ReadableMap options,
+                                                           @NonNull final String fallback) {
+        String minimalSecurityLevel = null;
+
+        if (null != options && options.hasKey(Maps.SECURITY_LEVEL)) {
+            minimalSecurityLevel = options.getString(Maps.SECURITY_LEVEL);
+        }
+
+        if (null == minimalSecurityLevel) minimalSecurityLevel = fallback;
+
+        return SecurityLevel.valueOf(minimalSecurityLevel);
+    }
+    //endregion
+
+    //region Implementation
+
+
+    private void addCipherStorageToMap(@NonNull final CipherStorage cipherStorage) {
+        cipherStorageMap.put(cipherStorage.getCipherStorageName(), cipherStorage);
+    }
+
+    /**
+     * Try to decrypt with provided storage.
+     */
+    @NonNull
+    private DecryptionResult decryptToResult(@NonNull final String alias,
+                                             @NonNull final CipherStorage storage,
+                                             @NonNull final ResultSet resultSet)
+            throws CryptoFailedException {
+        final DecryptionResultHandler handler = new NonInteractiveHandler();
+        storage.decrypt(handler, alias, resultSet.value, SecurityLevel.ANY);
+
+        CryptoFailedException.reThrowOnError(handler.getError());
+
+        if (null == handler.getResult()) {
+            throw new CryptoFailedException("No decryption results and no error. Something deeply wrong!");
+        }
+
+        return handler.getResult();
+    }
+
+    /**
+     * The "Current" CipherStorage is the cipherStorage with the highest API level that is
+     * lower than or equal to the current API level
+     */
+    @NonNull
+    /* package */ CipherStorage getCipherStorageForCurrentAPILevel() throws CryptoFailedException {
+        return getCipherStorageForCurrentAPILevel(true);
+    }
+
+    /**
+     * The "Current" CipherStorage is the cipherStorage with the highest API level that is
+     * lower than or equal to the current API level. Parameter allow to reduce level.
+     */
+    @NonNull
+    /* package */ CipherStorage getCipherStorageForCurrentAPILevel(final boolean useBiometry)
+            throws CryptoFailedException {
+        final int currentApiLevel = Build.VERSION.SDK_INT;
+        final boolean isBiometry = (isFingerprintAuthAvailable() || isFaceAuthAvailable() || isIrisAuthAvailable()) && useBiometry;
+        CipherStorage foundCipher = null;
+
+        for (CipherStorage variant : cipherStorageMap.values()) {
+            Log.d(RN_SECURE_STORAGE, "Probe cipher storage: " + variant.getClass().getSimpleName());
+
+            // Is the cipherStorage supported on the current API level?
+            final int minApiLevel = variant.getMinSupportedApiLevel();
+            final int capabilityLevel = variant.getCapabilityLevel();
+            final boolean isSupportedApi = (minApiLevel <= currentApiLevel);
+
+            // API not supported
+            if (!isSupportedApi) continue;
+
+            // Is the API level better than the one we previously selected (if any)?
+            if (foundCipher != null && capabilityLevel < foundCipher.getCapabilityLevel()) continue;
+
+            // if biometric supported but not configured properly than skip
+            if (variant.isBiometrySupported() && !isBiometry) continue;
+
+            // remember storage with the best capabilities
+            foundCipher = variant;
+        }
+
+        if (foundCipher == null) {
+            throw new CryptoFailedException("Unsupported Android SDK " + Build.VERSION.SDK_INT);
+        }
+
+        Log.d(RN_SECURE_STORAGE, "Selected storage: " + foundCipher.getClass().getSimpleName());
+
+        return foundCipher;
+    }
+
+    /**
+     * Throw exception in case of empty credentials providing.
+     */
+    public static void throwIfEmptyParams(@Nullable final String key,
+                                          @Nullable final String value)
+            throws EmptyParameterException {
+        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+            throw new EmptyParameterException("you passed empty or null username/password");
+        }
+    }
+
+    /**
+     * Throw exception if required security level does not match storage provided security level.
+     */
+    public static void throwIfInsufficientLevel(@NonNull final CipherStorage storage,
+                                                @NonNull final SecurityLevel level)
+            throws CryptoFailedException {
+        if (storage.securityLevel().satisfiesSafetyThreshold(level)) {
+            return;
+        }
+
+        throw new CryptoFailedException(
+                String.format(
+                        "Cipher Storage is too weak. Required security level is: %s, but only %s is provided",
+                        level.name(),
+                        storage.securityLevel().name()));
+    }
+
+    /**
+     * Extract cipher by it unique name. {@link CipherStorage#getCipherStorageName()}.
+     */
+    @Nullable
+    /* package */ CipherStorage getCipherStorageByName(@KnownCiphers @NonNull final String knownName) {
+        return cipherStorageMap.get(knownName);
+    }
+
+    /**
+     * True - if fingerprint hardware available and configured, otherwise false.
+     */
+    /* package */ boolean isFingerprintAuthAvailable() {
+        return DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFingerprintAuthAvailable(getReactApplicationContext());
+    }
+
+    /**
+     * True - if face recognition hardware available and configured, otherwise false.
+     */
+    /* package */ boolean isFaceAuthAvailable() {
+        return DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFaceAuthAvailable(getReactApplicationContext());
+    }
+
+    /**
+     * True - if iris recognition hardware available and configured, otherwise false.
+     */
+    /* package */ boolean isIrisAuthAvailable() {
+        return DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isIrisAuthAvailable(getReactApplicationContext());
+    }
+
+    //endregion
+    //region Nested declarations
 }
