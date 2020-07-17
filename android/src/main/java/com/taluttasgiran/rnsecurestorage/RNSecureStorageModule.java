@@ -2,10 +2,7 @@ package com.taluttasgiran.rnsecurestorage;
 
 import android.content.SharedPreferences;
 import android.os.Build;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
-
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
