@@ -135,7 +135,9 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     //endregion
 
     //region React Methods
-
+    /**
+     * Set a value.
+     */
     @ReactMethod
     protected void setItem(@NonNull final String key, @NonNull final String value, @Nullable final ReadableMap options, @NonNull final Promise promise) {
         try {
@@ -143,19 +145,18 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.resolve("Key stored successfully");
         } catch (EmptyParameterException e) {
             Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
-
             promise.reject(Errors.E_EMPTY_PARAMETERS, e);
         } catch (CryptoFailedException e) {
             Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
-
             promise.reject(Errors.E_CRYPTO_FAILED, e);
         } catch (Throwable fail) {
             Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
-
             promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
-
+    /**
+     * Get a value from secure storage.
+     */
     @ReactMethod
     protected void getItem(@NonNull final String key, @NonNull final Promise promise) {
         try {
@@ -168,7 +169,9 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
-
+    /**
+     * Checks if a key has been set.
+     */
     @ReactMethod
     public void exist(String key, Promise promise) {
         try {
@@ -177,7 +180,9 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
-
+    /**
+     * Multiple key pair set for secure storage
+     */
     @ReactMethod
     public void multiSet(ReadableArray keyValuePairs, @Nullable ReadableMap options, Promise promise) {
         WritableArray unsettedPairs = new WritableNativeArray();
@@ -211,57 +216,65 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 promise.resolve("All keys setted");
             }
         } else {
-            promise.reject("", "");
+              promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key / value pair set.");
         }
     }
-
-    @ReactMethod
-    public void multiGet(ReadableArray keys, Promise promise) {
-        WritableMap keyValueList = new WritableNativeMap();
-        if (keys.size() > 0) {
-            final int size = keys.size();
-            for (int i = 0; i < size; i++) {
-                String key = keys.getString(i);
-                if (key != null) {
-                    String value = null;
-                    try {
-                        value = this.getValue(key);
-                    } catch (CryptoFailedException ignored) {
-                    }
-                    if (value != null) {
-                        keyValueList.putString(key, value);
-                    }
-                }
-            }
-            promise.resolve(keyValueList);
-        } else {
-            promise.reject("", "");
-        }
-    }
-
+   /**
+     * Get multiple values from secure storage.
+     */
+      @ReactMethod
+      public void multiGet(ReadableArray keys, Promise promise) {
+          WritableMap keyValueList = new WritableNativeMap();
+          if (keys.size() > 0) {
+              final int size = keys.size();
+              for (int i = 0; i < size; i++) {
+                  String key = keys.getString(i);
+                  if (key != null) {
+                      String value = null;
+                      try {
+                          value = this.getValue(key);
+                      } catch (CryptoFailedException ignored) {
+                      }
+                      if (value != null) {
+                          keyValueList.putString(key, value);
+                      }
+                  }
+              }
+              promise.resolve(keyValueList);
+          } else {
+              promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key/value get");
+          }
+      }
+    /**
+     * Get all setted keys from secure storage.
+     */
     @ReactMethod
     public void getAllKeys(Promise promise) {
         try {
             promise.resolve(String.valueOf(this.prefsStorage.getAllStoredKeys()));
         } catch (Exception e) {
-            promise.reject("", "");
+            promise.reject("thereAreNoKeys", "RNSecureStorage: There are no stored keys.");
         }
     }
-
-    @ReactMethod
-    public void removeItem(String key, Promise promise) {
-        try {
-            boolean status = this.prefsStorage.removeEntry(key);
-            if (status) {
-                promise.resolve("Removed successfully");
-            } else {
-                promise.reject("", "");
-            }
-        } catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
+    /**
+     * Remove a value from secure storage.
+     */
+     @ReactMethod
+     public void removeItem(String key, Promise promise) {
+         try {
+             boolean status = this.prefsStorage.removeEntry(key);
+             if (status) {
+                 promise.resolve("Removed successfully");
+             } else {
+                 promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key remove");
+             }
+         } catch (Exception e) {
+             promise.reject(e);
+         }
+     }
+    /**
+     * Remove values from secure storage (On error will return unremoved keys)
+     */
     @ReactMethod
     public void multiRemove(ReadableArray keys, Promise promise) {
         WritableArray unremovedKeys = new WritableNativeArray();
@@ -282,23 +295,31 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 promise.resolve("All keys removed");
             }
         } else {
-            promise.reject("", "");
+            promise.reject("keyNotStored", "RNSecureStorage: An error occurred during key remove");
         }
     }
-
+  /**
+     * Removes whole RNSecureStorage data (On error will return unremoved keys)
+     */
     @ReactMethod
     public void clear(Promise promise) {
         try {
             if (this.prefsStorage.clear()) {
-                promise.resolve("Removed successfully");
+                if (this.prefsStorage.getAllStoredKeys().isNull(0)) {
+                    promise.resolve("All keys/values removed successfully");
+                } else {
+                    promise.resolve(String.valueOf(this.prefsStorage.getAllStoredKeys()));
+                }
             } else {
-                promise.reject("", "");
+                promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key remove");
             }
         } catch (Exception e) {
             promise.reject(e);
         }
     }
-
+    /**
+     * Get supported biometry type (Will return FaceID, TouchID, Fingerprint, Iris, Face or undefined/null)
+     */
     @ReactMethod
     public void getSupportedBiometryType(@NonNull final Promise promise) {
         try {
