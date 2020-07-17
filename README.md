@@ -2,6 +2,9 @@
 
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
+## v3.0.0-beta.0 Released
+This version still under development. But you can look and try. [v3.0.0-development Branch](https://github.com/talut/rn-secure-storage/tree/v3.0.0-development)
+
 
 ### After v2 this package has AndroidX support. If you want to use without AndroidX please use *v1.1.1*
 
@@ -22,9 +25,6 @@ Under API 23 RNSecureStorage is using [secure-preferences](https://github.com/sc
 Above API 23 RNSecureStorage is using [Android Keystore](https://developer.android.com/training/articles/keystore)
 
 ## Getting Started
-
-## v3.0.0-beta.0 Released
-THis version still under development. But you can look and try. [v3.0.0-development Branch](https://github.com/talut/rn-secure-storage/tree/v3.0.0-development)
 
 **With NPM**
 ```
