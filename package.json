@@ -1,6 +1,6 @@
 {
   "name": "rn-secure-storage",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Secure Storage for React Native (Android & iOS) - Keychain & Keystore",
   "publishConfig": {"registry": "https://npm.pkg.github.com/@talut"},
   "main": "index.js",
