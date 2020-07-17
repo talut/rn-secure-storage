@@ -2,19 +2,7 @@
 
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
-### With v3, this package's IOS part rewrote with Swift.
-
 **[Go to F.A.Q for more information.](#faq)**  
-
-### IOS
-
-RNSecureStorage is using Keychain for secure storing with Swift.
-
-### Android
-
-Under API 23 RNSecureStorage is using
-
-Above API 23 RNSecureStorage is using
 
 ## Getting Started
 
@@ -28,15 +16,23 @@ npm install --save rn-secure-storage
 yarn add rn-secure-storage
 ```
 
+## If you have experience with Android Cipher please help me to maintenance this library. Contact: _hi@talut.dev_
 
-### Version 3.0.0
-- IOS part rewrote with Swift.
-- Get all keys feature added.
-- Remove all stored values feature added.
-- Multi getting values by keys feature added.
+### Version 3.0.0 - **THIS VERSION HAS A LOT OF BREAKING CHANGES PLEASE USE CAREFULLY**
+- Android part copied & modified from **oblador/react-native-keychain** and added new API's
+- IOS part rewrote with Swift and new API's.
+- All API's names changed new API's added.
+- Some of api return type changed.
+- `removeAll` added.
+- `getAllKeys` added.
+- `multiSet` added.
+- `multiGet` added.
+- `multiRemove` added.
+- `getSupportedBiometryType` added.
+- 
 
-##### [Version 2.0.4](./README-v2.0.4.md)
-
+##### [Version 2.0.5](https://github.com/talut/rn-secure-storage/tree/2.0.5)
+**You can still use v2.0.5**
 
 ### Usage
 
@@ -86,7 +82,7 @@ yarn add rn-secure-storage
       })
   }
    /**
-     * Removes whole RNSecureStorage data (On error will return unremoved keys)
+     * Removes whole RNSecureStorage data (It'll return unremoved keys)
      */
   const removeAll = () => {
     RNSecureStorage.clear()
@@ -98,7 +94,7 @@ yarn add rn-secure-storage
       })
   }
    /**
-     * Checks if a key has been set.
+     * Checks if a key has been set it'll return tru/false
      */
   const itemExist = () => {
     RNSecureStorage.exist("@refreshToken")
@@ -122,11 +118,11 @@ yarn add rn-secure-storage
       })
   }
    /**
-     * Multiple key pair set for secure storage
+     * Multiple key pair set for secure storage. Will return unsetted keys.
      */
   const multiSet = () => {
     const pair_one = ["@idToken", "id_token_value"]
-    const pair_two = ["@accessToken", "access_token_value"]
+    const pair_two = ["@accessToken"]
     const pair_three = ["@refreshToken", "refresh_token_value"]
     RNSecureStorage.multiSet([pair_one, pair_two, pair_three], { accessible: ACCESSIBLE.WHEN_UNLOCKED })
       .then(res => {
@@ -215,31 +211,9 @@ export default App
 |**`ALWAYS_THIS_DEVICE_ONLY`**|The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.|
 
 
-### Example
-
-You can find the usage example of the package in the example folder. 
-
-```console
-git clone https://github.com/talut/rn-secure-package
-
-cd rn-secure-package/example
-
-npm install
-
-react-native run-ios/android
-```
-
 ### F.A.Q
-
-- **Hey can I trust your code/package?**
-- *You can see all of my code in the repo and can review it. Also if you want, you can easily can fork my repo and change what bothers you. This package is under MIT license. So I can't give you any warranty.*  **But you should know, I'm using this package in my projects.**
-
-- **Will you maintain this package?**
-- *Yeah, I'm planning to do so.3*
-
 - **How can I support you?**
 - *You can use Patreon: [patreon.com/talut](https://patreon.com/talut)*
-
 
 ## License
 
