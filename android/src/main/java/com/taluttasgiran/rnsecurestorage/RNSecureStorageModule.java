@@ -14,6 +14,10 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.taluttasgiran.rnsecurestorage.PrefsStorage.ResultSet;
 import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorage;
 import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorage.DecryptionResult;
@@ -25,10 +29,6 @@ import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageKeystoreRsaE
 import com.taluttasgiran.rnsecurestorage.exceptions.CryptoFailedException;
 import com.taluttasgiran.rnsecurestorage.exceptions.EmptyParameterException;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,11 +100,8 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     public RNSecureStorageModule(@NonNull final ReactApplicationContext reactContext) {
         super(reactContext);
         prefsStorage = new PrefsStorage(reactContext);
-
         addCipherStorageToMap(new CipherStorageFacebookConceal(reactContext));
         addCipherStorageToMap(new CipherStorageKeystoreAesCbc());
-
-        // we have a references to newer api that will fail load of app classes in old androids OS
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             addCipherStorageToMap(new CipherStorageKeystoreRsaEcb());
         }
@@ -183,7 +180,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multiSet(ReadableArray keyValuePairs, @Nullable ReadableMap options, Promise promise) {
-        ArrayList<String> unsettedPairs = new ArrayList<>();
+        WritableArray unsettedPairs = new WritableNativeArray();
         if (keyValuePairs.size() > 0) {
             final int size = keyValuePairs.size();
             for (int i = 0; i < size; i++) {
@@ -204,12 +201,12 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                     }
                 } else {
                     if (keyValuePair.getString(0) != null) {
-                        unsettedPairs.add(keyValuePair.getString(0));
+                        unsettedPairs.pushString(keyValuePair.getString(0));
                     }
                 }
             }
             if (unsettedPairs.size() > 0) {
-                promise.resolve(String.valueOf(new JSONArray(unsettedPairs)));
+                promise.resolve(unsettedPairs);
             } else {
                 promise.resolve("All keys setted");
             }
@@ -220,7 +217,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multiGet(ReadableArray keys, Promise promise) {
-        Map<String, String> keyValueList = new HashMap<>();
+        WritableMap keyValueList = new WritableNativeMap();
         if (keys.size() > 0) {
             final int size = keys.size();
             for (int i = 0; i < size; i++) {
@@ -232,15 +229,11 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                     } catch (CryptoFailedException ignored) {
                     }
                     if (value != null) {
-                        keyValueList.put(key, value);
+                        keyValueList.putString(key, value);
                     }
                 }
             }
-            if (keyValueList.size() > 0) {
-                promise.resolve(String.valueOf(new JSONObject(keyValueList)));
-            } else {
-                promise.reject("", "");
-            }
+            promise.resolve(keyValueList);
         } else {
             promise.reject("", "");
         }
@@ -271,7 +264,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void multiRemove(ReadableArray keys, Promise promise) {
-        ArrayList<String> unremovedKeys = new ArrayList<>();
+        WritableArray unremovedKeys = new WritableNativeArray();
         if (keys.size() > 0) {
             final int size = keys.size();
             for (int i = 0; i < size; i++) {
@@ -279,12 +272,12 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                 if (key != null) {
                     boolean status = this.prefsStorage.removeEntry(key);
                     if (!status) {
-                        unremovedKeys.add(key);
+                        unremovedKeys.pushString(key);
                     }
                 }
             }
             if (unremovedKeys.size() > 0) {
-                promise.resolve(String.valueOf(new JSONArray(unremovedKeys)));
+                promise.resolve(unremovedKeys);
             } else {
                 promise.resolve("All keys removed");
             }
@@ -339,7 +332,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             Log.e(RN_SECURE_STORAGE, "No entry found for service: " + RN_SECURE_STORAGE_ALIAS);
             return null;
         }
-        final CipherStorage current = getCipherStorageForCurrentAPILevel(false);
+        final CipherStorage current = getCipherStorageForCurrentAPILevel();
         DecryptionResult decryptionResult = decryptToResult(RN_SECURE_STORAGE_ALIAS, current, resultSet);
         return decryptionResult.value;
     }
@@ -369,7 +362,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
         // attempt to access none existing storage will force fallback logic.
         if (null == result) {
-            result = getCipherStorageForCurrentAPILevel(false);
+            result = getCipherStorageForCurrentAPILevel();
         }
 
         return result;
@@ -418,14 +411,10 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
     //region Implementation
 
-
     private void addCipherStorageToMap(@NonNull final CipherStorage cipherStorage) {
         cipherStorageMap.put(cipherStorage.getCipherStorageName(), cipherStorage);
     }
 
-    /**
-     * Try to decrypt with provided storage.
-     */
     @NonNull
     private DecryptionResult decryptToResult(@NonNull final String alias,
                                              @NonNull final CipherStorage storage,
@@ -443,44 +432,18 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         return handler.getResult();
     }
 
-    /**
-     * The "Current" CipherStorage is the cipherStorage with the highest API level that is
-     * lower than or equal to the current API level
-     */
     @NonNull
-    /* package */ CipherStorage getCipherStorageForCurrentAPILevel() throws CryptoFailedException {
-        return getCipherStorageForCurrentAPILevel(true);
-    }
-
-    /**
-     * The "Current" CipherStorage is the cipherStorage with the highest API level that is
-     * lower than or equal to the current API level. Parameter allow to reduce level.
-     */
-    @NonNull
-    /* package */ CipherStorage getCipherStorageForCurrentAPILevel(final boolean useBiometry)
-            throws CryptoFailedException {
+    CipherStorage getCipherStorageForCurrentAPILevel() throws CryptoFailedException {
         final int currentApiLevel = Build.VERSION.SDK_INT;
-        final boolean isBiometry = (isFingerprintAuthAvailable() || isFaceAuthAvailable() || isIrisAuthAvailable()) && useBiometry;
         CipherStorage foundCipher = null;
 
         for (CipherStorage variant : cipherStorageMap.values()) {
             Log.d(RN_SECURE_STORAGE, "Probe cipher storage: " + variant.getClass().getSimpleName());
-
-            // Is the cipherStorage supported on the current API level?
             final int minApiLevel = variant.getMinSupportedApiLevel();
             final int capabilityLevel = variant.getCapabilityLevel();
             final boolean isSupportedApi = (minApiLevel <= currentApiLevel);
-
-            // API not supported
             if (!isSupportedApi) continue;
-
-            // Is the API level better than the one we previously selected (if any)?
             if (foundCipher != null && capabilityLevel < foundCipher.getCapabilityLevel()) continue;
-
-            // if biometric supported but not configured properly than skip
-            if (variant.isBiometrySupported() && !isBiometry) continue;
-
-            // remember storage with the best capabilities
             foundCipher = variant;
         }
 
@@ -493,20 +456,14 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         return foundCipher;
     }
 
-    /**
-     * Throw exception in case of empty credentials providing.
-     */
     public static void throwIfEmptyParams(@Nullable final String key,
                                           @Nullable final String value)
             throws EmptyParameterException {
         if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
-            throw new EmptyParameterException("you passed empty or null username/password");
+            throw new EmptyParameterException("you passed empty or null key/value");
         }
     }
 
-    /**
-     * Throw exception if required security level does not match storage provided security level.
-     */
     public static void throwIfInsufficientLevel(@NonNull final CipherStorage storage,
                                                 @NonNull final SecurityLevel level)
             throws CryptoFailedException {
@@ -521,32 +478,20 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
                         storage.securityLevel().name()));
     }
 
-    /**
-     * Extract cipher by it unique name. {@link CipherStorage#getCipherStorageName()}.
-     */
     @Nullable
-    /* package */ CipherStorage getCipherStorageByName(@KnownCiphers @NonNull final String knownName) {
+    CipherStorage getCipherStorageByName(@KnownCiphers @NonNull final String knownName) {
         return cipherStorageMap.get(knownName);
     }
 
-    /**
-     * True - if fingerprint hardware available and configured, otherwise false.
-     */
-    /* package */ boolean isFingerprintAuthAvailable() {
+    boolean isFingerprintAuthAvailable() {
         return DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFingerprintAuthAvailable(getReactApplicationContext());
     }
 
-    /**
-     * True - if face recognition hardware available and configured, otherwise false.
-     */
-    /* package */ boolean isFaceAuthAvailable() {
+    boolean isFaceAuthAvailable() {
         return DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isFaceAuthAvailable(getReactApplicationContext());
     }
 
-    /**
-     * True - if iris recognition hardware available and configured, otherwise false.
-     */
-    /* package */ boolean isIrisAuthAvailable() {
+    boolean isIrisAuthAvailable() {
         return DeviceAvailability.isBiometricAuthAvailable(getReactApplicationContext()) && DeviceAvailability.isIrisAuthAvailable(getReactApplicationContext());
     }
 

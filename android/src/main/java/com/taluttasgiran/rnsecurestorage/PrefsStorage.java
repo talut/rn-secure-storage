@@ -19,7 +19,7 @@ import java.util.List;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class PrefsStorage {
-    public static final String KEYCHAIN_DATA = "RN_KEYCHAIN";
+    public static final String RN_SECURE_STORAGE = "RN_SECURE_STORAGE";
 
     static public class ResultSet extends CipherStorage.CipherResult<byte[]> {
         @KnownCiphers
@@ -36,7 +36,7 @@ public class PrefsStorage {
     private final SharedPreferences prefs;
 
     public PrefsStorage(@NonNull final ReactApplicationContext reactContext) {
-        this.prefs = reactContext.getSharedPreferences(KEYCHAIN_DATA, Context.MODE_PRIVATE);
+        this.prefs = reactContext.getSharedPreferences(RN_SECURE_STORAGE, Context.MODE_PRIVATE);
     }
 
 
