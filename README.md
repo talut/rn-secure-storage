@@ -8,15 +8,15 @@ Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
 **With NPM**
 ```
-npm install --save rn-secure-storage
+npm install --save rn-secure-storage@beta
 ```
 
 **With YARN**
 ```
-yarn add rn-secure-storage
+yarn add rn-secure-storage@beta
 ```
 
-## If you have experience with Android Cipher please help me to maintenance this library. Contact: _hi@talut.dev_
+### If you have experience with Android Cipher please help me to maintenance this library. Contact: _hi@talut.dev_
 
 ### Version 3.0.0 - **THIS VERSION HAS A LOT OF BREAKING CHANGES PLEASE USE CAREFULLY**
 - Android part copied & modified from **oblador/react-native-keychain** and added new API's
@@ -42,8 +42,6 @@ yarn add rn-secure-storage
  import { Button, SafeAreaView, ScrollView, StatusBar } from "react-native"
  import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage"
  const App = () => {
-
-
     /**
      * Set a value from secure storage.
      */
