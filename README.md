@@ -29,7 +29,6 @@ yarn add rn-secure-storage
 - `multiGet` added.
 - `multiRemove` added.
 - `getSupportedBiometryType` added.
-- 
 
 ##### [Version 2.0.5](https://github.com/talut/rn-secure-storage/tree/2.0.5)
 **You can still use v2.0.5**
