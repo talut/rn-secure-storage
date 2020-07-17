@@ -23,6 +23,9 @@ Above API 23 RNSecureStorage is using [Android Keystore](https://developer.andro
 
 ## Getting Started
 
+## v3.0.0-beta.0 Released
+THis version still under development. But you can look and try. [v3.0.0-development Branch](https://github.com/talut/rn-secure-storage/tree/v3.0.0-development)
+
 **With NPM**
 ```
 npm install --save rn-secure-storage
