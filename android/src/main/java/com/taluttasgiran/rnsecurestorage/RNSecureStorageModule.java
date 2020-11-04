@@ -74,7 +74,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             try {
                 promise.resolve(rnKeyStore.getPlainText(getReactApplicationContext(), key));
             } catch (FileNotFoundException fnfe) {
-                promise.reject(fnfe);
+                promise.reject( new NoSuchKeyException(String.format("NoSuchKeyException: %s",fnfe.toString())));
             } catch (Exception e) {
                 promise.reject(e);
             }
