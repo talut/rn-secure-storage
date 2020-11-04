@@ -168,7 +168,7 @@ RCT_EXPORT_METHOD(set: (NSString *)key value:(NSString *)value
 
 NSError * getNoSuchKeyException(NSString *errMsg)
 {
- [NSError errorWithDomain:serviceName code:200 userInfo:@{@"errorName": "NoSuchKeyException", @"reason": errMsg}];
+    NSError *error = [NSError errorWithDomain:serviceName code:200 userInfo:@{@"errorName": @"NoSuchKeyException", @"reason": errMsg}];
     return error;
 }
 
