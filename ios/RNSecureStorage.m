@@ -166,6 +166,12 @@ RCT_EXPORT_METHOD(set: (NSString *)key value:(NSString *)value
     }
 }
 
+NSError * getNoSuchKeyException(NSString *errMsg)
+{
+ [NSError errorWithDomain:serviceName code:200 userInfo:@{@"errorName": "NoSuchKeyException", @"reason": errMsg}];
+    return error;
+}
+
 RCT_EXPORT_METHOD(get:(NSString *)key
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
@@ -175,13 +181,14 @@ RCT_EXPORT_METHOD(get:(NSString *)key
         NSString *value = [self searchKeychainCopyMatching:key];
         if (value == nil) {
             NSString* errorMessage = @"key does not present";
-            reject(@"404", errorMessage, secureKeyStoreError(errorMessage));
+            reject(@"404", errorMessage, getNoSuchKeyException(errorMessage));
+
         } else {
             resolve(value);
         }
     }
     @catch (NSException *exception) {
-        NSString* errorMessage = @"key does not present";
+        NSString* errorMessage = @"key does not present(2)";
         reject(@"1", errorMessage, secureKeyStoreError(errorMessage));
     }
 }
