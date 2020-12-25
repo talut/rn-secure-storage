@@ -136,12 +136,14 @@ npm install
 
 react-native run-ios/android
 ```
+### Version 2.0.7
+- [https://github.com/talut/rn-secure-storage/pull/56](https://github.com/talut/rn-secure-storage/pull/56) merged.
+
 ### Version 2.0.6
 - [https://github.com/talut/rn-secure-storage/issues/53](https://github.com/talut/rn-secure-storage/issues/53) solved.
 
 ### Version 2.0.5
 - [https://github.com/talut/rn-secure-storage/pull/51](https://github.com/talut/rn-secure-storage/pull/51) merged.
-
 
 ### Version 2.0.4
 - [https://github.com/talut/rn-secure-storage/pull/44](https://github.com/talut/rn-secure-storage/pull/44) merged.
@@ -201,6 +203,7 @@ react-native run-ios/android
 - Thanks to you [@cagriyilmaz](https://github.com/cagriyilmaz) for IOS part.
 - Thanks to you [@akiver](https://github.com/akiver) for TypeScript definitions.
 - Thanks to you [@kirin-p](https://github.com/kirin-p) for exits method.
+- Thanks to you [@jussikinnula](https://github.com/jussikinnula).
 - [Thanks to you @pradeep1991singh for react-native-secure-key-store](https://github.com/pradeep1991singh/)
 
 ## License
