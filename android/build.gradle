@@ -41,6 +41,6 @@ dependencies {
     implementation "com.facebook.react:react-native:+"
 }
 task copyDownloadableDepsToLibs(type: Copy) {
-    from configurations.compile
+    from configurations.implementation
     into 'libs'
 }
