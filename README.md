@@ -2,24 +2,20 @@
 
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
-**[Go to F.A.Q for more information.](#faq)**  
-
 ## Getting Started
 
 **With NPM**
 ```
-npm install --save rn-secure-storage@beta
+npm install --save rn-secure-storage
 ```
 
 **With YARN**
 ```
-yarn add rn-secure-storage@beta
+yarn add rn-secure-storage
 ```
 
-### If you have experience with Android Cipher please help me to maintenance this library. Contact: _hi@talut.dev_
-
-### Version 3.0.0 - **THIS VERSION HAS A LOT OF BREAKING CHANGES PLEASE USE CAREFULLY**
-- Android part copied & modified from **oblador/react-native-keychain** and added new API's
+### Version 3.0.0
+- Android part rewritten.
 - IOS part rewrote with Swift and new API's.
 - All API's names changed new API's added.
 - Some of api return type changed.
@@ -206,11 +202,6 @@ export default App
 |**`WHEN_UNLOCKED_THIS_DEVICE_ONLY`**|The data in the keychain item can be accessed only while the device is unlocked by the user. Items with this attribute do not migrate to a new device.|
 |**`AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY`**|The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user. Items with this attribute never migrate to a new device.|
 |**`ALWAYS_THIS_DEVICE_ONLY`**|The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.|
-
-
-### F.A.Q
-- **How can I support you?**
-- *You can use Patreon: [patreon.com/talut](https://patreon.com/talut)*
 
 ## License
 
