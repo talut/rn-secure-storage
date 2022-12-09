@@ -2,6 +2,10 @@
 
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
+## v2.0.7
+- Thanks to [@Merlier](https://github.com/Merlier).
+- Thanks to [@corlissc](https://github.com/corlissc).
+
 ## v3.0.0-beta.0
 This version still under development. But you can look and try. [v3.0.0-development Branch](https://github.com/talut/rn-secure-storage/tree/v3.0.0-development)
 
