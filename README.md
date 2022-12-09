@@ -2,7 +2,7 @@
 
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
-## v2.0.7
+## v2.0.8
 - Thanks to [@Merlier](https://github.com/Merlier).
 - Thanks to [@corlissc](https://github.com/corlissc).
 
