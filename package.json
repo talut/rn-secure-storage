@@ -17,11 +17,11 @@
     "token",
     "react-token"
   ],
-  "author": "Talut Tasgiran",
+  "author": "Mohamed Megdich",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/talut/rn-secure-storage.git"
+    "url": "git+https://github.com/MohamedMegdich1/rn-secure-storage.git"
   },
   "bugs": {
     "url": "https://github.com/talut/rn-secure-storage/issues"
