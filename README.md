@@ -38,131 +38,132 @@ yarn add rn-secure-storage
  import { Button, SafeAreaView, ScrollView, StatusBar } from "react-native"
  import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage"
  const App = () => {
-    /**
-     * Set a value from secure storage.
-     */
-  const setItem = () => {
-    RNSecureStorage.setItem("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-    /**
-     * Get a value from secure storage.
-     */
-  const getItem = () => {
-    RNSecureStorage.getItem("token")
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-    /**
-     * Remove a value from secure storage.
-     */
-  const removeItem = () => {
-    RNSecureStorage.removeItem("token")
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-   /**
-     * Removes whole RNSecureStorage data (It'll return unremoved keys)
-     */
-  const removeAll = () => {
-    RNSecureStorage.clear()
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-   /**
-     * Checks if a key has been set it'll return tru/false
-     */
-  const itemExist = () => {
-    RNSecureStorage.exist("@refreshToken")
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-   /**
-     * Get all setted keys from secure storage.
-     */
-  const getAllKeys = () => {
-    RNSecureStorage.getAllKeys()
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-   /**
-     * Multiple key pair set for secure storage. Will return unsetted keys.
-     */
-  const multiSet = () => {
-    const pair_one = ["@idToken", "id_token_value"]
-    const pair_two = ["@accessToken"]
-    const pair_three = ["@refreshToken", "refresh_token_value"]
-    RNSecureStorage.multiSet([pair_one, pair_two, pair_three], { accessible: ACCESSIBLE.WHEN_UNLOCKED })
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
- /**
-     * Get multiple values from secure storage.
-     */
-  const multiGet = () => {
-    RNSecureStorage.multiGet(["@idToken", "@accessToken", "@refreshToken"])
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-    /**
-     * Remove values from secure storage (On error will return unremoved keys)
-     */
-  const multiRemove = () => {
-    RNSecureStorage.multiRemove(["@refreshToken", "token"])
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-   /**
-     * Get supported biometry type (Will return FaceID, TouchID or undefined)
-     */
-  const getSupportedBiometryType = () => {
-    RNSecureStorage.getSupportedBiometryType()
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+	 /**
+		* Set a value from secure storage.
+		*/
+	 const setItem = () => {
+		 RNSecureStorage.setItem("token", "^W((nXWi~M`$Gtu<s+;$`M1SotPG^~", { accessible: ACCESSIBLE.WHEN_UNLOCKED })
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Get a value from secure storage.
+		*/
+	 const getItem = () => {
+		 RNSecureStorage.getItem("token")
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Remove a value from secure storage.
+		*/
+	 const removeItem = () => {
+		 RNSecureStorage.removeItem("token")
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Removes whole RNSecureStorage data (It'll return unremoved keys)
+		*/
+	 const removeAll = () => {
+		 RNSecureStorage.clear()
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Checks if a key has been set it'll return tru/false
+		*/
+	 const itemExist = () => {
+		 RNSecureStorage.exist("@refreshToken")
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Get all setted keys from secure storage.
+		*/
+	 const getAllKeys = () => {
+		 RNSecureStorage.getAllKeys()
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Multiple key pair set for secure storage. Will return unsetted keys.
+		*/
+	 const multiSet = () => {
+		 const items = {
+			 "@idToken": "id_token_value",
+			 "@refreshToken": "refresh_token_value"
+		 };
+		 RNSecureStorage.multiSet(items, { accessible: ACCESSIBLE.WHEN_UNLOCKED })
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Get multiple values from secure storage.
+		*/
+	 const multiGet = () => {
+		 RNSecureStorage.multiGet(["@idToken", "@accessToken", "@refreshToken"])
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Remove values from secure storage (On error will return unremoved keys)
+		*/
+	 const multiRemove = () => {
+		 RNSecureStorage.multiRemove(["@refreshToken", "token"])
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
+	 /**
+		* Get supported biometry type (Will return FaceID, TouchID or undefined)
+		*/
+	 const getSupportedBiometryType = () => {
+		 RNSecureStorage.getSupportedBiometryType()
+			 .then(res => {
+				 console.log(res);
+			 })
+			 .catch(err => {
+				 console.log(err);
+			 });
+	 };
 
-  return (
+	 return (
       <SafeAreaView>
         <ScrollView>
           <Button title="Store Item" onPress={setItem} />

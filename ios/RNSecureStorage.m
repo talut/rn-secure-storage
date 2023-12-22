@@ -1,9 +1,3 @@
-//
-//  RNSecureStorage.m
-//
-//  Created by Talut TASGIRAN on 10.07.2020.
-//
-
 #import <Foundation/Foundation.h>
 #import <React/RCTBridgeModule.h>
 
@@ -25,14 +19,14 @@ RCT_EXTERN_METHOD(getItem:(NSString *)key resolver:(RCTPromiseResolveBlock)resol
 RCT_EXTERN_METHOD(exist:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
 /**
-  * Get all setted keys from secure storage.
+  * Get all stored keys from secure storage.
   */
 RCT_EXTERN_METHOD(getAllKeys:(RCTPromiseResolveBlock *)resolver rejecter:(RCTPromiseRejectBlock)reject)
 
 /**
  * Multiple key pair set for secure storage
  */
-RCT_EXTERN_METHOD(multiSet:(NSArray *)keyValuePairs options:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(multiSet:(NSDictionary *)keyValuePairs options:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)reject)
 
 /**
  * Get multiple values from secure storage.

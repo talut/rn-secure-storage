@@ -1,8 +1,3 @@
-//
-//  RNSecureStorage.swift
-//  Created by Talut TASGIRAN on 10.07.2020.
-//
-
 import Foundation
 import Security
 import LocalAuthentication
@@ -65,7 +60,7 @@ class RNSecureStorage: NSObject {
   }
 
   @objc(multiSet:options:resolver:rejecter:)
-  func multiSet(_ keyValuePairs:[[String]], options:[String:Any], resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
+  func multiSet(_ keyValuePairs:[String:String], options:[String:Any], resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
     let accessible = options["accessible"] as! String
     let status = helper.multiSetKeychainValues(keyValuePairs: keyValuePairs, accessible: accessible)
     if status {
@@ -99,7 +94,7 @@ class RNSecureStorage: NSObject {
   }
 
   /*
-   Clear all given keys. (On error will return unremoved keys)
+   Clear all given keys. (On error will return un-removed keys)
    */
   @objc(multiRemove:resolver:rejecter:)
   func multiRemove(_ keys:[String], resolver: RCTPromiseResolveBlock, rejecter: RCTPromiseRejectBlock){
@@ -123,7 +118,6 @@ class RNSecureStorage: NSObject {
     }else{
       resolver("All stored keys removed.")
     }
-
   }
   /*
    Get supported biometry type

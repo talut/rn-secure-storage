@@ -1,8 +1,3 @@
-//
-//  RNSecureStorageHelper.swift
-//  Created by Talut TASGIRAN on 10.03.2020.
-//
-
 import Foundation
 
 class RNSecureStorageHelper {
@@ -108,16 +103,16 @@ class RNSecureStorageHelper {
   /*
    Set multiple values from keychain with keys
    */
-  func multiSetKeychainValues(keyValuePairs: [[String]], accessible:String) -> Bool{
-    var settedPairs = 0
-    for keyValue in keyValuePairs {
-      let val = self.createKeychainValue(key: keyValue[0], value: keyValue[1], accessible:accessible)
-      if val {
-        settedPairs = settedPairs + 1
-      }
+    func multiSetKeychainValues(keyValuePairs: [String: String], accessible: String) -> Bool {
+        var settedPairs = 0
+        for (key, value) in keyValuePairs {
+            let val = self.createKeychainValue(key: key, value: value, accessible: accessible)
+            if val {
+                settedPairs += 1
+            }
+        }
+        return settedPairs == keyValuePairs.count
     }
-    return settedPairs == keyValuePairs.count
-  }
 
 
   /*

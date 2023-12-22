@@ -2,7 +2,9 @@
   "name": "rn-secure-storage",
   "version": "3.0.0",
   "description": "Secure Storage for React Native (Android & iOS) - Keychain & Keystore",
-  "publishConfig": {"registry": "https://npm.pkg.github.com/@talut"},
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@talut"
+  },
   "main": "index.js",
   "types": "rn-secure-storage.d.ts",
   "keywords": [
@@ -18,7 +20,7 @@
     "token",
     "react-token"
   ],
-  "author": "Talut Tasgiran",
+  "author": "Talut TASGIRAN <hi@talut.dev> (https://talut.dev)",
   "license": "MIT",
   "repository": {
     "type": "git",
