@@ -6,17 +6,24 @@
  */
 
 import React from "react";
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage";
+import { Animated, Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import RNSecureStorage, { ACCESSIBLE, SECURITY_LEVEL, STORAGE_TYPE } from "rn-secure-storage";
+import ScrollView = Animated.ScrollView;
+
+
+const options = {
+  accessible: ACCESSIBLE.ALWAYS,
+  securityLevel: SECURITY_LEVEL.ANY,
+  storage: STORAGE_TYPE.FB
+};
 
 function App(): React.JSX.Element {
+
 
   const [message, setMessage] = React.useState<any>(null);
   const [error, setError] = React.useState<any>(null);
   const setItem = () => {
-    RNSecureStorage.setItem("key", "value", {
-      accessible: ACCESSIBLE.WHEN_UNLOCKED
-    }).then(res => {
+    RNSecureStorage.setItem("key", "value", options).then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -27,7 +34,7 @@ function App(): React.JSX.Element {
   };
 
   const getItem = () => {
-    RNSecureStorage.getItem("key").then(res => {
+    RNSecureStorage.getItem("key", options).then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -38,7 +45,7 @@ function App(): React.JSX.Element {
   };
 
   const removeItem = () => {
-    RNSecureStorage.removeItem("key").then(res => {
+    RNSecureStorage.removeItem("key", options).then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -50,6 +57,7 @@ function App(): React.JSX.Element {
 
   const getAllKeys = () => {
     RNSecureStorage.getAllKeys().then(res => {
+        console.log(typeof res, res);
         if (res) setMessage(res.join(", "));
         setError(null);
       }, err => {
@@ -60,7 +68,7 @@ function App(): React.JSX.Element {
   };
 
   const exist = () => {
-    RNSecureStorage.exist("key").then(res => {
+    RNSecureStorage.exist("key", options).then(res => {
         setMessage(res ? "Exists" : "Not exists");
         setError(null);
       }, err => {
@@ -71,7 +79,7 @@ function App(): React.JSX.Element {
   };
 
   const clear = () => {
-    RNSecureStorage.clear().then(res => {
+    RNSecureStorage.clear(options).then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -116,7 +124,7 @@ function App(): React.JSX.Element {
   };
 
   const multiRemove = () => {
-    RNSecureStorage.multiRemove(["multikey1", "multikey2"]).then(res => {
+    RNSecureStorage.multiRemove(["multikey1", "multikey2"], options).then(res => {
         console.log(res);
         setMessage(res);
         setError(null);
@@ -145,59 +153,61 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.inputArea}>
-          <Button onPress={setItem} title="Set Item" />
+      <ScrollView>
+        <View style={styles.content}>
+          <View style={styles.inputArea}>
+            <Button onPress={setItem} title="Set Item" />
+          </View>
+          <View style={styles.inputArea}>
+            <Button onPress={getItem} title="Get key value" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={getAllKeys} title="Get all stored keys" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={removeItem} title="Remove key value" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={exist} title="Check if key exists" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={clear} title="Clear all stored items" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={multiSet} title="Multiple key/value set" />
+          </View>
+          <View style={styles.inputArea}>
+            <Button onPress={multiGet} title="Multiple key/value get" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={multiRemove} title="Multiple key/value remove" />
+          </View>
+
+          <View style={styles.inputArea}>
+            <Button onPress={getSupportedBiometryType} title="Get supported biometry types" />
+          </View>
+
+
+          {message && <View style={[styles.inputArea, {
+            width: "100%"
+          }]}>
+            <Text style={styles.value}>Message: {message}</Text>
+          </View>}
+
+          {error && <View style={[styles.inputArea, {
+            width: "100%"
+          }]}>
+            <Text style={styles.value}>Error: <Text style={styles.err}>{JSON.stringify(error)}</Text></Text>
+          </View>}
+
         </View>
-        <View style={styles.inputArea}>
-          <Button onPress={getItem} title="Get key value" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={getAllKeys} title="Get all stored keys" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={removeItem} title="Remove key value" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={exist} title="Check if key exists" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={clear} title="Clear all stored items" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={multiSet} title="Multiple key/value set" />
-        </View>
-        <View style={styles.inputArea}>
-          <Button onPress={multiGet} title="Multiple key/value get" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={multiRemove} title="Multiple key/value remove" />
-        </View>
-
-        <View style={styles.inputArea}>
-          <Button onPress={getSupportedBiometryType} title="Get supported biometry types" />
-        </View>
-
-
-        {message && <View style={[styles.inputArea, {
-          width: "100%"
-        }]}>
-          <Text style={styles.value}>Message: {message}</Text>
-        </View>}
-
-        {error && <View style={[styles.inputArea, {
-          width: "100%"
-        }]}>
-          <Text style={styles.value}>Error: <Text style={styles.err}>{JSON.stringify(error)}</Text></Text>
-        </View>}
-
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

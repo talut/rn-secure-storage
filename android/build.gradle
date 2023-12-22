@@ -1,4 +1,3 @@
-
 buildscript {
     // The Android Gradle plugin is only required when opening the android folder stand-alone.
     // This avoids unnecessary downloads and potential conflicts when the library is included as a
@@ -10,51 +9,48 @@ buildscript {
         }
 
         dependencies {
-            classpath("com.android.tools.build:gradle:4.0.0")
+            classpath("com.android.tools.build:gradle")
         }
     }
 }
 
 apply plugin: 'com.android.library'
+
 def safeExtGet(prop, fallback) {
-  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', 29)
-  buildToolsVersion safeExtGet('buildToolsVersion', '28.0.3')
+    compileSdkVersion safeExtGet('compileSdkVersion', 34)
+    buildToolsVersion safeExtGet('buildToolsVersion', '34.0.0')
 
-  defaultConfig {
-    minSdkVersion safeExtGet('minSdkVersion', 16)
-    targetSdkVersion safeExtGet('targetSdkVersion', 29)
-    versionCode 4
-    versionName "3.0.0"
-  }
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', 23)
+        targetSdkVersion safeExtGet('targetSdkVersion', 34)
+        versionCode 4
+        versionName "3.0.0"
+    }
 
-  lintOptions {
-    abortOnError false
-  }
+    lintOptions {
+        abortOnError false
+    }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 repositories {
     mavenCentral()
-    	google()
-        jcenter()
+    google()
+    jcenter()
 }
 
 dependencies {
-  implementation "com.facebook.react:react-native:+"
-  implementation 'androidx.appcompat:appcompat:1.1.0'
-  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-  implementation 'androidx.biometric:biometric:1.0.1@aar'
-  implementation "com.facebook.conceal:conceal:1.1.3@aar"
-}
-task copyDownloadableDepsToLibs(type: Copy) {
-    from configurations.compile
-    into 'libs'
+    implementation "com.facebook.react:react-native:+"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.biometric:biometric:1.0.1@aar'
+    implementation "com.facebook.conceal:conceal:1.1.3@aar"
 }

@@ -14,6 +14,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -28,10 +29,10 @@ import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageKeystoreRsaE
 import com.taluttasgiran.rnsecurestorage.cipherStorage.CipherStorageKeystoreRsaEcb.NonInteractiveHandler;
 import com.taluttasgiran.rnsecurestorage.exceptions.CryptoFailedException;
 import com.taluttasgiran.rnsecurestorage.exceptions.EmptyParameterException;
+import com.taluttasgiran.rnsecurestorage.exceptions.KeyStoreAccessException;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     //region Constants
@@ -102,9 +103,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         prefsStorage = new PrefsStorage(reactContext);
         addCipherStorageToMap(new CipherStorageFacebookConceal(reactContext));
         addCipherStorageToMap(new CipherStorageKeystoreAesCbc());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            addCipherStorageToMap(new CipherStorageKeystoreRsaEcb());
-        }
+        addCipherStorageToMap(new CipherStorageKeystoreRsaEcb());
     }
 
     //region Overrides
@@ -135,40 +134,38 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
     //endregion
 
     //region React Methods
+
     /**
      * Set a value.
      */
     @ReactMethod
-    protected void setItem(@NonNull final String key, @NonNull final String value, @Nullable final ReadableMap options, @NonNull final Promise promise) {
+    protected void setItem(@NonNull final String key, @NonNull final String value, @NonNull final ReadableMap options, @NonNull final Promise promise) {
         try {
-            setValueWithKey(key, value);
+            setValueWithKey(key, value, options);
             promise.resolve("Key stored successfully");
         } catch (EmptyParameterException e) {
-            Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
             promise.reject(Errors.E_EMPTY_PARAMETERS, e);
         } catch (CryptoFailedException e) {
-            Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
             promise.reject(Errors.E_CRYPTO_FAILED, e);
         } catch (Throwable fail) {
-            Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
             promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
+
     /**
      * Get a value from secure storage.
      */
     @ReactMethod
-    protected void getItem(@NonNull final String key, @NonNull final Promise promise) {
+    protected void getItem(@NonNull final String key, @NonNull ReadableMap options, @NonNull final Promise promise) {
         try {
-            promise.resolve(getValue(key));
+            promise.resolve(getValue(key, options));
         } catch (CryptoFailedException e) {
-            Log.e(RN_SECURE_STORAGE, e.getMessage() != null ? e.getMessage() : "");
             promise.reject(Errors.E_CRYPTO_FAILED, e);
         } catch (Throwable fail) {
-            Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
             promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
+
     /**
      * Checks if a key has been set.
      */
@@ -180,71 +177,65 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
     /**
      * Multiple key pair set for secure storage
      */
     @ReactMethod
-    public void multiSet(ReadableArray keyValuePairs, @Nullable ReadableMap options, Promise promise) {
+    public void multiSet(ReadableMap keyValuePairs, @NonNull ReadableMap options, Promise promise) {
         WritableArray unsettedPairs = new WritableNativeArray();
-        if (keyValuePairs.size() > 0) {
-            final int size = keyValuePairs.size();
-            for (int i = 0; i < size; i++) {
-                ReadableArray keyValuePair = keyValuePairs.getArray(i);
-                if (keyValuePair != null && keyValuePair.size() == 2) {
-                    String key = keyValuePair.getString(0);
-                    String value = keyValuePair.getString(1);
-                    if (key != null && value != null) {
-                        try {
-                            this.setValueWithKey(key, value);
-                        } catch (CryptoFailedException e) {
-                            promise.reject("", "");
-                        } catch (EmptyParameterException e) {
-                            promise.reject("", "");
-                        }
-                    } else {
-                        promise.reject("", "");
+        if (keyValuePairs != null && keyValuePairs.keySetIterator().hasNextKey()) {
+            ReadableMapKeySetIterator iterator = keyValuePairs.keySetIterator();
+            while (iterator.hasNextKey()) {
+                String key = iterator.nextKey();
+                String value = keyValuePairs.getString(key);
+
+                if (value != null) {
+                    try {
+                        this.setValueWithKey(key, value, options);
+                    } catch (CryptoFailedException | EmptyParameterException e) {
+                        promise.reject("error", e.getMessage());
                     }
                 } else {
-                    if (keyValuePair.getString(0) != null) {
-                        unsettedPairs.pushString(keyValuePair.getString(0));
-                    }
+                    unsettedPairs.pushString(key);
                 }
             }
+
             if (unsettedPairs.size() > 0) {
                 promise.resolve(unsettedPairs);
             } else {
                 promise.resolve("All keys setted");
             }
         } else {
-              promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key / value pair set.");
+            promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key / value pair set.");
         }
     }
-   /**
+
+    /**
      * Get multiple values from secure storage.
      */
-      @ReactMethod
-      public void multiGet(ReadableArray keys, Promise promise) {
-          WritableMap keyValueList = new WritableNativeMap();
-          if (keys.size() > 0) {
-              final int size = keys.size();
-              for (int i = 0; i < size; i++) {
-                  String key = keys.getString(i);
-                  if (key != null) {
-                      String value = null;
-                      try {
-                          value = this.getValue(key);
-                      } catch (CryptoFailedException ignored) {
-                      }
-                      if (value != null) {
-                          keyValueList.putString(key, value);
-                      }
-                  }
-              }
-              promise.resolve(keyValueList);
-          } else {
-              promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key/value get");
-          }
-      }
+    @ReactMethod
+    public void multiGet(ReadableArray keys, @NonNull ReadableMap options, Promise promise) {
+        WritableMap keyValueList = new WritableNativeMap();
+        if (keys.size() > 0) {
+            final int size = keys.size();
+            for (int i = 0; i < size; i++) {
+                String key = keys.getString(i);
+                String value = null;
+                try {
+                    value = this.getValue(key, options);
+                } catch (CryptoFailedException ignored) {
+                }
+                if (value != null) {
+                    keyValueList.putString(key, value);
+                }
+            }
+            promise.resolve(keyValueList);
+        } else {
+            promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key/value get");
+        }
+    }
+
     /**
      * Get all setted keys from secure storage.
      */
@@ -256,37 +247,39 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject("thereAreNoKeys", "RNSecureStorage: There are no stored keys.");
         }
     }
+
     /**
      * Remove a value from secure storage.
      */
-     @ReactMethod
-     public void removeItem(String key, Promise promise) {
-         try {
-             boolean status = this.prefsStorage.removeEntry(key);
-             if (status) {
-                 promise.resolve("Removed successfully");
-             } else {
-                 promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key remove");
-             }
-         } catch (Exception e) {
-             promise.reject(e);
-         }
-     }
+    @ReactMethod
+    public void removeItem(String key, @NonNull ReadableMap options, Promise promise) {
+        try {
+            boolean status = this.prefsStorage.removeEntry(key);
+            removeValueWithKey(key, options);
+            if (status) {
+                promise.resolve("Removed successfully");
+            } else {
+                promise.reject(Errors.E_UNKNOWN_ERROR, "RNSecureStorage: An error occurred during key remove");
+            }
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
     /**
      * Remove values from secure storage (On error will return unremoved keys)
      */
     @ReactMethod
-    public void multiRemove(ReadableArray keys, Promise promise) {
+    public void multiRemove(ReadableArray keys, @NonNull ReadableMap options, Promise promise) {
         WritableArray unremovedKeys = new WritableNativeArray();
         if (keys.size() > 0) {
             final int size = keys.size();
             for (int i = 0; i < size; i++) {
                 String key = keys.getString(i);
-                if (key != null) {
-                    boolean status = this.prefsStorage.removeEntry(key);
-                    if (!status) {
-                        unremovedKeys.pushString(key);
-                    }
+                boolean status = this.prefsStorage.removeEntry(key);
+                removeItem(key, options, promise);
+                if (!status) {
+                    unremovedKeys.pushString(key);
                 }
             }
             if (unremovedKeys.size() > 0) {
@@ -298,7 +291,8 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject("keyNotStored", "RNSecureStorage: An error occurred during key remove");
         }
     }
-  /**
+
+    /**
      * Removes whole RNSecureStorage data (On error will return unremoved keys)
      */
     @ReactMethod
@@ -317,6 +311,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
     /**
      * Get supported biometry type (Will return FaceID, TouchID, Fingerprint, Iris, Face or undefined/null)
      */
@@ -334,40 +329,48 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
 
             promise.resolve(reply);
         } catch (Exception e) {
-            Log.e(RN_SECURE_STORAGE, e.getMessage(), e);
-
             promise.reject(Errors.E_SUPPORTED_BIOMETRY_ERROR, e);
         } catch (Throwable fail) {
-            Log.e(RN_SECURE_STORAGE, fail.getMessage(), fail);
-
             promise.reject(Errors.E_UNKNOWN_ERROR, fail);
         }
     }
 
     //endregion
 
-    protected String getValue(@NonNull final String key) throws CryptoFailedException {
+    protected String getValue(@NonNull final String key, @NonNull final ReadableMap options) throws CryptoFailedException {
         final ResultSet resultSet = prefsStorage.getEncryptedEntry(key);
 
         if (resultSet == null) {
-            Log.e(RN_SECURE_STORAGE, "No entry found for service: " + RN_SECURE_STORAGE_ALIAS);
             return null;
         }
-        final CipherStorage current = getCipherStorageForCurrentAPILevel();
+        final CipherStorage current = getSelectedStorage(options);
         DecryptionResult decryptionResult = decryptToResult(RN_SECURE_STORAGE_ALIAS, current, resultSet);
         return decryptionResult.value;
     }
 
-    protected void setValueWithKey(@NonNull final String key,
-                                   @NonNull final String value) throws CryptoFailedException, EmptyParameterException {
+    protected void setValueWithKey(@NonNull final String key, @NonNull final String value, @NonNull final ReadableMap options) throws CryptoFailedException, EmptyParameterException {
         throwIfEmptyParams(key, value);
-        final SecurityLevel level = getSecurityLevelOrDefault(null);
-        final CipherStorage storage = getSelectedStorage(null);
+        final SecurityLevel level = getSecurityLevelOrDefault(options);
+        final CipherStorage storage = getSelectedStorage(options);
 
         throwIfInsufficientLevel(storage, level);
 
         final CipherStorage.EncryptionResult result = storage.encrypt(RN_SECURE_STORAGE_ALIAS, value, level);
         prefsStorage.storeEncryptedEntry(key, result);
+    }
+
+    protected void removeValueWithKey(@NonNull final String key, @NonNull final ReadableMap options) throws CryptoFailedException, EmptyParameterException {
+        if (TextUtils.isEmpty(key)) {
+            throw new EmptyParameterException("you passed empty or null key");
+        }
+        final SecurityLevel level = getSecurityLevelOrDefault(options);
+        final CipherStorage storage = getSelectedStorage(options);
+        throwIfInsufficientLevel(storage, level);
+        try {
+            storage.removeKey(key);
+        } catch (KeyStoreAccessException e) {
+            throw new CryptoFailedException("KeyStoreAccessException", e);
+        }
     }
 
     @NonNull

@@ -30,201 +30,229 @@ import javax.crypto.SecretKeyFactory;
 @TargetApi(Build.VERSION_CODES.M)
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class CipherStorageKeystoreAesCbc extends CipherStorageBase {
-  //region Constants
-  /** AES */
-  public static final String ALGORITHM_AES = KeyProperties.KEY_ALGORITHM_AES;
-  /** CBC */
-  public static final String BLOCK_MODE_CBC = KeyProperties.BLOCK_MODE_CBC;
-  /** PKCS7 */
-  public static final String PADDING_PKCS7 = KeyProperties.ENCRYPTION_PADDING_PKCS7;
-  /** Transformation path. */
-  public static final String ENCRYPTION_TRANSFORMATION =
-    ALGORITHM_AES + "/" + BLOCK_MODE_CBC + "/" + PADDING_PKCS7;
-  /** Key size. */
-  public static final int ENCRYPTION_KEY_SIZE = 256;
+    //region Constants
+    /**
+     * AES
+     */
+    public static final String ALGORITHM_AES = KeyProperties.KEY_ALGORITHM_AES;
+    /**
+     * CBC
+     */
+    public static final String BLOCK_MODE_CBC = KeyProperties.BLOCK_MODE_CBC;
+    /**
+     * PKCS7
+     */
+    public static final String PADDING_PKCS7 = KeyProperties.ENCRYPTION_PADDING_PKCS7;
+    /**
+     * Transformation path.
+     */
+    public static final String ENCRYPTION_TRANSFORMATION =
+            ALGORITHM_AES + "/" + BLOCK_MODE_CBC + "/" + PADDING_PKCS7;
+    /**
+     * Key size.
+     */
+    public static final int ENCRYPTION_KEY_SIZE = 256;
 
-  public static final String DEFAULT_SERVICE = "RN_KEYCHAIN_DEFAULT_ALIAS";
-  //endregion
+    public static final String DEFAULT_SERVICE = "RN_KEYCHAIN_DEFAULT_ALIAS";
+    //endregion
 
-  //region Configuration
-  @Override
-  public String getCipherStorageName() {
-    return KnownCiphers.AES;
-  }
-
-  /** API23 is a requirement. */
-  @Override
-  public int getMinSupportedApiLevel() {
-    return Build.VERSION_CODES.M;
-  }
-
-  /** it can guarantee security levels up to SECURE_HARDWARE/SE/StrongBox */
-  @Override
-  public SecurityLevel securityLevel() {
-    return SecurityLevel.SECURE_HARDWARE;
-  }
-
-  /** Biometry is Not Supported. */
-  @Override
-  public boolean isBiometrySupported() {
-    return false;
-  }
-
-  /** AES. */
-  @Override
-  @NonNull
-  protected String getEncryptionAlgorithm() {
-    return ALGORITHM_AES;
-  }
-
-  /** AES/CBC/PKCS7Padding */
-  @NonNull
-  @Override
-  protected String getEncryptionTransformation() {
-    return ENCRYPTION_TRANSFORMATION;
-  }
-
-  /** {@inheritDoc}. Override for saving the compatibility with previous version of lib. */
-  @Override
-  public String getDefaultAliasServiceName() {
-    return DEFAULT_SERVICE;
-  }
-
-  //endregion
-
-  //region Overrides
-  @Override
-  @NonNull
-  public EncryptionResult encrypt(@NonNull final String alias,
-                                  @NonNull final String value,
-                                  @NonNull final SecurityLevel level)
-    throws CryptoFailedException {
-
-    throwIfInsufficientLevel(level);
-
-    final String safeAlias = getDefaultAliasIfEmpty(alias, getDefaultAliasServiceName());
-    final AtomicInteger retries = new AtomicInteger(1);
-
-    try {
-      final Key key = extractGeneratedKey(safeAlias, level, retries);
-
-      return new EncryptionResult(
-        encryptString(key, value),
-        this);
-    } catch (GeneralSecurityException e) {
-      throw new CryptoFailedException("Could not encrypt data with alias: " + alias, e);
-    } catch (Throwable fail) {
-      throw new CryptoFailedException("Unknown error with alias: " + alias +
-        ", error: " + fail.getMessage(), fail);
-    }
-  }
-
-  @Override
-  @NonNull
-  public DecryptionResult decrypt(@NonNull final String alias,
-                                  @NonNull final byte[] value,
-                                  @NonNull final SecurityLevel level)
-    throws CryptoFailedException {
-
-    throwIfInsufficientLevel(level);
-
-    final String safeAlias = getDefaultAliasIfEmpty(alias, getDefaultAliasServiceName());
-    final AtomicInteger retries = new AtomicInteger(1);
-
-    try {
-      final Key key = extractGeneratedKey(safeAlias, level, retries);
-
-      return new DecryptionResult(
-        decryptBytes(key, value),
-        getSecurityLevel(key));
-    } catch (GeneralSecurityException e) {
-      throw new CryptoFailedException("Could not decrypt data with alias: " + alias, e);
-    } catch (Throwable fail) {
-      throw new CryptoFailedException("Unknown error with alias: " + alias +
-        ", error: " + fail.getMessage(), fail);
-    }
-  }
-
-  @Override
-  public void decrypt(@NonNull final DecryptionResultHandler handler,
-                      @NonNull final String service,
-                      @NonNull final byte[] value,
-                      @NonNull final SecurityLevel level) {
-    try {
-      final DecryptionResult results = decrypt(service, value, level);
-
-      handler.onDecrypt(results, null);
-    } catch (Throwable fail) {
-      handler.onDecrypt(null, fail);
-    }
-  }
-  //endregion
-
-  //region Implementation
-
-  /** Get encryption algorithm specification builder instance. */
-  @NonNull
-  @Override
-  protected KeyGenParameterSpec.Builder getKeyGenSpecBuilder(@NonNull final String alias)
-    throws GeneralSecurityException {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      throw new KeyStoreAccessException("Unsupported API" + Build.VERSION.SDK_INT + " version detected.");
+    //region Configuration
+    @Override
+    public String getCipherStorageName() {
+        return KnownCiphers.AES;
     }
 
-    final int purposes = KeyProperties.PURPOSE_DECRYPT | KeyProperties.PURPOSE_ENCRYPT;
-
-    return new KeyGenParameterSpec.Builder(alias, purposes)
-      .setBlockModes(BLOCK_MODE_CBC)
-      .setEncryptionPaddings(PADDING_PKCS7)
-      .setRandomizedEncryptionRequired(true)
-      .setKeySize(ENCRYPTION_KEY_SIZE);
-  }
-
-  /** Get information about provided key. */
-  @NonNull
-  @Override
-  protected KeyInfo getKeyInfo(@NonNull final Key key) throws GeneralSecurityException {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      throw new KeyStoreAccessException("Unsupported API" + Build.VERSION.SDK_INT + " version detected.");
+    /**
+     * API23 is a requirement.
+     */
+    @Override
+    public int getMinSupportedApiLevel() {
+        return Build.VERSION_CODES.M;
     }
 
-    final SecretKeyFactory factory = SecretKeyFactory.getInstance(key.getAlgorithm(), KEYSTORE_TYPE);
-    final KeySpec keySpec = factory.getKeySpec((SecretKey) key, KeyInfo.class);
-
-    return (KeyInfo) keySpec;
-  }
-
-  /** Try to generate key from provided specification. */
-  @NonNull
-  @Override
-  protected Key generateKey(@NonNull final KeyGenParameterSpec spec) throws GeneralSecurityException {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      throw new KeyStoreAccessException("Unsupported API" + Build.VERSION.SDK_INT + " version detected.");
+    /**
+     * it can guarantee security levels up to SECURE_HARDWARE/SE/StrongBox
+     */
+    @Override
+    public SecurityLevel securityLevel() {
+        return SecurityLevel.SECURE_HARDWARE;
     }
 
-    final KeyGenerator generator = KeyGenerator.getInstance(getEncryptionAlgorithm(), KEYSTORE_TYPE);
+    /**
+     * Biometry is Not Supported.
+     */
+    @Override
+    public boolean isBiometrySupported() {
+        return false;
+    }
 
-    // initialize key generator
-    generator.init(spec);
+    /**
+     * AES.
+     */
+    @Override
+    @NonNull
+    protected String getEncryptionAlgorithm() {
+        return ALGORITHM_AES;
+    }
 
-    return generator.generateKey();
-  }
-  //endregion
+    /**
+     * AES/CBC/PKCS7Padding
+     */
+    @NonNull
+    @Override
+    protected String getEncryptionTransformation() {
+        return ENCRYPTION_TRANSFORMATION;
+    }
 
-  //region Initialization Vector encrypt/decrypt support
-  @NonNull
-  @Override
-  public byte[] encryptString(@NonNull final Key key, @NonNull final String value)
-    throws GeneralSecurityException, IOException {
+    /**
+     * {@inheritDoc}. Override for saving the compatibility with previous version of lib.
+     */
+    @Override
+    public String getDefaultAliasServiceName() {
+        return DEFAULT_SERVICE;
+    }
 
-    return encryptString(key, value, IV.encrypt);
-  }
+    //endregion
 
-  @NonNull
-  @Override
-  public String decryptBytes(@NonNull final Key key, @NonNull final byte[] bytes)
-    throws GeneralSecurityException, IOException {
-    return decryptBytes(key, bytes, IV.decrypt);
-  }
-  //endregion
+    //region Overrides
+    @Override
+    @NonNull
+    public EncryptionResult encrypt(@NonNull final String alias,
+                                    @NonNull final String value,
+                                    @NonNull final SecurityLevel level)
+            throws CryptoFailedException {
+
+        throwIfInsufficientLevel(level);
+
+        final String safeAlias = getDefaultAliasIfEmpty(alias, getDefaultAliasServiceName());
+        final AtomicInteger retries = new AtomicInteger(1);
+
+        try {
+            final Key key = extractGeneratedKey(safeAlias, level, retries);
+
+            return new EncryptionResult(
+                    encryptString(key, value),
+                    this);
+        } catch (GeneralSecurityException e) {
+            throw new CryptoFailedException("Could not encrypt data with alias: " + alias, e);
+        } catch (Throwable fail) {
+            throw new CryptoFailedException("Unknown error with alias: " + alias +
+                    ", error: " + fail.getMessage(), fail);
+        }
+    }
+
+    @Override
+    @NonNull
+    public DecryptionResult decrypt(@NonNull final String alias,
+                                    @NonNull final byte[] value,
+                                    @NonNull final SecurityLevel level)
+            throws CryptoFailedException {
+
+        throwIfInsufficientLevel(level);
+
+        final String safeAlias = getDefaultAliasIfEmpty(alias, getDefaultAliasServiceName());
+        final AtomicInteger retries = new AtomicInteger(1);
+
+        try {
+            final Key key = extractGeneratedKey(safeAlias, level, retries);
+
+            return new DecryptionResult(
+                    decryptBytes(key, value),
+                    getSecurityLevel(key));
+        } catch (GeneralSecurityException e) {
+            throw new CryptoFailedException("Could not decrypt data with alias: " + alias, e);
+        } catch (Throwable fail) {
+            throw new CryptoFailedException("Unknown error with alias: " + alias +
+                    ", error: " + fail.getMessage(), fail);
+        }
+    }
+
+    @Override
+    public void decrypt(@NonNull final DecryptionResultHandler handler,
+                        @NonNull final String service,
+                        @NonNull final byte[] value,
+                        @NonNull final SecurityLevel level) {
+        try {
+            final DecryptionResult results = decrypt(service, value, level);
+
+            handler.onDecrypt(results, null);
+        } catch (Throwable fail) {
+            handler.onDecrypt(null, fail);
+        }
+    }
+    //endregion
+
+    //region Implementation
+
+    /**
+     * Get encryption algorithm specification builder instance.
+     */
+    @NonNull
+    @Override
+    protected KeyGenParameterSpec.Builder getKeyGenSpecBuilder(@NonNull final String alias)
+            throws GeneralSecurityException {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            throw new KeyStoreAccessException("Unsupported API" + Build.VERSION.SDK_INT + " version detected.");
+        }
+
+        final int purposes = KeyProperties.PURPOSE_DECRYPT | KeyProperties.PURPOSE_ENCRYPT;
+
+        return new KeyGenParameterSpec.Builder(alias, purposes)
+                .setBlockModes(BLOCK_MODE_CBC)
+                .setEncryptionPaddings(PADDING_PKCS7)
+                .setRandomizedEncryptionRequired(true)
+                .setKeySize(ENCRYPTION_KEY_SIZE);
+    }
+
+    /**
+     * Get information about provided key.
+     */
+    @NonNull
+    @Override
+    protected KeyInfo getKeyInfo(@NonNull final Key key) throws GeneralSecurityException {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            throw new KeyStoreAccessException("Unsupported API" + Build.VERSION.SDK_INT + " version detected.");
+        }
+
+        final SecretKeyFactory factory = SecretKeyFactory.getInstance(key.getAlgorithm(), KEYSTORE_TYPE);
+        final KeySpec keySpec = factory.getKeySpec((SecretKey) key, KeyInfo.class);
+
+        return (KeyInfo) keySpec;
+    }
+
+    /**
+     * Try to generate key from provided specification.
+     */
+    @NonNull
+    @Override
+    protected Key generateKey(@NonNull final KeyGenParameterSpec spec) throws GeneralSecurityException {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            throw new KeyStoreAccessException("Unsupported API" + Build.VERSION.SDK_INT + " version detected.");
+        }
+
+        final KeyGenerator generator = KeyGenerator.getInstance(getEncryptionAlgorithm(), KEYSTORE_TYPE);
+
+        // initialize key generator
+        generator.init(spec);
+
+        return generator.generateKey();
+    }
+    //endregion
+
+    //region Initialization Vector encrypt/decrypt support
+    @NonNull
+    @Override
+    public byte[] encryptString(@NonNull final Key key, @NonNull final String value)
+            throws GeneralSecurityException, IOException {
+
+        return encryptString(key, value, IV.encrypt);
+    }
+
+    @NonNull
+    @Override
+    public String decryptBytes(@NonNull final Key key, @NonNull final byte[] bytes)
+            throws GeneralSecurityException, IOException {
+        return decryptBytes(key, bytes, IV.decrypt);
+    }
+    //endregion
 }
