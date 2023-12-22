@@ -1,79 +1,174 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# RNSecureStorage
 
-# Getting Started
+[![npm version](https://badge.fury.io/js/rn-secure-storage.svg)](https://badge.fury.io/js/rn-secure-storage)
+[![npm downloads](https://img.shields.io/npm/dm/rn-secure-storage.svg?maxAge=2592000)](https://img.shields.io/npm/dm/rn-secure-storage.svg?maxAge=2592000)
+[![npm](https://img.shields.io/npm/dt/rn-secure-storage.svg?maxAge=2592000)](https://img.shields.io/npm/dt/rn-secure-storage.svg?maxAge=2592000)
+![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)
+Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### Thanks for using this library
 
-## Step 1: Start the Metro Server
+Please read my disclaimer about maintaining this library [here](#disclaimer)
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+#### If you like this library, please consider supporting my work by buying me a coffee
 
-To start Metro, run the following command from the _root_ of your React Native project:
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoff.ee/talut)
 
-```bash
-# using npm
-npm start
+## Getting Started
 
-# OR using Yarn
-yarn start
+**With NPM**
+
+```
+npm install --save rn-secure-storage
 ```
 
-## Step 2: Start your Application
+**With YARN**
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
-```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```
+yarn add rn-secure-storage
 ```
 
-### For iOS
+### What's changed in v3.0.0
 
-```bash
-# using npm
-npm run ios
+- Rewritten Android module with enhanced security features. [I need your reviews](#ineedyourreviews)
+- Android minSdkVersion is now 23 (Android 6.0 Marshmallow)
+- iOS module redeveloped using Swift and updated APIs.
+- Comprehensive renaming and expansion of APIs.
+- Modifications to the return types of some APIs.
+- Added `clear` for comprehensive data clearance.
+- Introduced `getAllKeys` for retrieving all stored keys.
+- Implemented `multiSet` for setting multiple values simultaneously.
+- New `multiGet` feature for fetching multiple values at once.
+- `multiRemove` added for bulk deletion of items.
+- `getSupportedBiometryType` introduced for iOS (supports biometric authentication types).
 
-# OR using Yarn
-yarn ios
+### API
+
+- [setItem](#setitem)
+- [getItem](#getitem)
+- [removeItem](#removeitem)
+- [exists](#exists)
+- [getAllKeys](#getallkeys)
+- [clear](#clear)
+- [multiSet](#multiset)
+- [multiGet](#multiget)
+- [multiRemove](#multiremove)
+- [getSupportedBiometryType](#getsupportedbiometrytype)
+
+### setItem
+
+```js
+import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
+
+RNSecureStorage.setItem("key", "value", {accessible: ACCESSIBLE.WHEN_UNLOCKED})
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### getItem
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+```js
+RNSecureStorage.getItem("key")
+```
 
-## Step 3: Modifying your App
+### removeItem
 
-Now that you have successfully run the app, let's modify it.
+```js
+RNSecureStorage.removeItem("key")
+```
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+### exists
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+```js
+RNSecureStorage.exist("key")
+```
 
-## Congratulations! :tada:
+### getAllKeys
 
-You've successfully run and modified your React Native App. :partying_face:
+```js
+RNSecureStorage.getAllKeys()
+```
 
-### Now what?
+### clear
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+```js
+RNSecureStorage.clear()
+```
 
-# Troubleshooting
+### multiSet
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+```js
+import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 
-# Learn More
+const items = {"key_1": "multi key 1", "key_2": "multi key 2"};
+RNSecureStorage.multiSet(items, {accessible: ACCESSIBLE.WHEN_UNLOCKED})
+```
 
-To learn more about React Native, take a look at the following resources:
+### multiGet
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```js
+RNSecureStorage.multiGet(["key_1", "key_2"])
+```
+
+### multiRemove
+
+```js
+RNSecureStorage.multiRemove(["key_1", "key_2"])
+```
+
+### getSupportedBiometryType
+
+```js
+RNSecureStorage.getSupportedBiometryType()
+```
+
+## Options
+
+| Key              | Platform | Description                                                                                      | Default                               |
+|------------------|----------|--------------------------------------------------------------------------------------------------|---------------------------------------|
+| **`accessible`** | iOS only | This indicates when a keychain item is accessible, see possible values in `Keychain.ACCESSIBLE`. | *`Keychain.ACCESSIBLE.WHEN_UNLOCKED`* |
+
+### `Keychain.ACCESSIBLE` enum
+
+| Key                                       | Description                                                                                                                                                                            |
+|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **`WHEN_UNLOCKED`**                       | The data in the keychain item can be accessed only while the device is unlocked by the user.                                                                                           |
+| **`AFTER_FIRST_UNLOCK`**                  | The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user.                                                                  |
+| **`ALWAYS`**                              | The data in the keychain item can always be accessed regardless of whether the device is locked.                                                                                       |
+| **`WHEN_PASSCODE_SET_THIS_DEVICE_ONLY`**  | The data in the keychain can only be accessed when the device is unlocked. Only available if a passcode is set on the device. Items with this attribute never migrate to a new device. |
+| **`WHEN_UNLOCKED_THIS_DEVICE_ONLY`**      | The data in the keychain item can be accessed only while the device is unlocked by the user. Items with this attribute do not migrate to a new device.                                 |
+| **`AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY`** | The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user. Items with this attribute never migrate to a new device.         |
+| **`ALWAYS_THIS_DEVICE_ONLY`**             | The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.                              |
+
+#### You can also check out sample project for more details
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+### I need your reviews
+
+I have rewritten the Android module with enhanced security features. I need your reviews. Please test the new version and let me know your
+thoughts. I will be happy to hear your suggestions and comments. I'm planning to release the new version to handle biometric authentication
+on Android.
+
+### Connect with me
+
+<p align="left">
+<a href="https://linkedin.com/in/taluttasgiran" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="taluttasgiran" height="30" width="40" /></a>
+<a href="https://twitter.com/taluttasgiran" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="taluttasgiran" height="30" width="40" /></a>
+<a href="https://dev.to/talut" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/devto.svg" alt="talut" height="30" width="40" /></a>
+<a href="https://stackoverflow.com/users/3366361" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/stack-overflow.svg" alt="3366361" height="30" width="40" /></a>
+<a href="https://www.youtube.com/c/@taluttasgiran" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/youtube.svg" alt="@taluttasgiran" height="30" width="40" /></a>
+</p>
+
+### Disclaimer
+
+As an open-source enthusiast and developer, I originally created this library for professional use. However, with recent changes in my
+career, my focus has shifted away from React Native, limiting my involvement to personal projects. Consequently, my time to address issues
+and review pull requests for this library has become restricted. I remain committed to maintaining and improving this library, but my
+response times might be longer. I greatly appreciate your patience and understanding.
+
+The beauty of open-source is in collaboration. If you find this library useful and would like to contribute, whether through code,
+addressing issues, or even buying a coffee to show support, it would be immensely appreciated. Together, we can ensure the continued
+development and enhancement of this library.
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/talut)

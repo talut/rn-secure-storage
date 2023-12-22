@@ -31,6 +31,7 @@ yarn add rn-secure-storage
 ### What's changed in v3.0.0
 
 - Rewritten Android module with enhanced security features. [I need your reviews](#ineedyourreviews)
+- Android minSdkVersion is now 23 (Android 6.0 Marshmallow)
 - iOS module redeveloped using Swift and updated APIs.
 - Comprehensive renaming and expansion of APIs.
 - Modifications to the return types of some APIs.
@@ -137,6 +138,8 @@ RNSecureStorage.getSupportedBiometryType()
 | **`AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY`** | The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user. Items with this attribute never migrate to a new device.         |
 | **`ALWAYS_THIS_DEVICE_ONLY`**             | The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.                              |
 
+#### You can also check out sample project for more details
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
@@ -148,6 +151,7 @@ thoughts. I will be happy to hear your suggestions and comments. I'm planning to
 on Android.
 
 ### Connect with me
+
 <p align="left">
 <a href="https://linkedin.com/in/taluttasgiran" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="taluttasgiran" height="30" width="40" /></a>
 <a href="https://twitter.com/taluttasgiran" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="taluttasgiran" height="30" width="40" /></a>
