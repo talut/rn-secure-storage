@@ -21,7 +21,9 @@ function App(): React.JSX.Element {
   const [message, setMessage] = React.useState<any>(null);
   const [error, setError] = React.useState<any>(null);
   const setItem = () => {
-    RNSecureStorage.setItem("idToken", "sdoi34y5o34webfld,v sv", options).then(res => {
+    RNSecureStorage.setItem("idToken", "sdoi34y5o34webfld,v sv", {
+      accessible: ACCESSIBLE.WHEN_UNLOCKED
+    }).then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -110,7 +112,7 @@ function App(): React.JSX.Element {
   };
 
   const multiGet = () => {
-    RNSecureStorage.multiGet(["multikey1", "multikey2"]).then(res => {
+    RNSecureStorage.multiGet(["multikey1", "multikey2", "multikey3"]).then(res => {
         if (res) setMessage(JSON.stringify(res));
         setError(null);
       }, err => {
