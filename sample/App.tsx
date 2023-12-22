@@ -7,14 +7,12 @@
 
 import React from "react";
 import { Animated, Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import RNSecureStorage, { ACCESSIBLE, SECURITY_LEVEL, STORAGE_TYPE } from "rn-secure-storage";
+import RNSecureStorage, { ACCESSIBLE } from "rn-secure-storage";
 import ScrollView = Animated.ScrollView;
 
 
 const options = {
-  accessible: ACCESSIBLE.ALWAYS,
-  securityLevel: SECURITY_LEVEL.ANY,
-  storage: STORAGE_TYPE.FB
+  accessible: ACCESSIBLE.WHEN_UNLOCKED
 };
 
 function App(): React.JSX.Element {
@@ -23,7 +21,7 @@ function App(): React.JSX.Element {
   const [message, setMessage] = React.useState<any>(null);
   const [error, setError] = React.useState<any>(null);
   const setItem = () => {
-    RNSecureStorage.setItem("key", "value", options).then(res => {
+    RNSecureStorage.setItem("idToken", "sdoi34y5o34webfld,v sv", options).then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -34,7 +32,7 @@ function App(): React.JSX.Element {
   };
 
   const getItem = () => {
-    RNSecureStorage.getItem("key", options).then(res => {
+    RNSecureStorage.getItem("idToken").then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -45,7 +43,7 @@ function App(): React.JSX.Element {
   };
 
   const removeItem = () => {
-    RNSecureStorage.removeItem("key", options).then(res => {
+    RNSecureStorage.removeItem("idToken").then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -57,8 +55,7 @@ function App(): React.JSX.Element {
 
   const getAllKeys = () => {
     RNSecureStorage.getAllKeys().then(res => {
-        console.log(typeof res, res);
-        if (res) setMessage(res.join(", "));
+        if (res) setMessage(JSON.stringify(res));
         setError(null);
       }, err => {
         setError(err);
@@ -68,7 +65,7 @@ function App(): React.JSX.Element {
   };
 
   const exist = () => {
-    RNSecureStorage.exist("key", options).then(res => {
+    RNSecureStorage.exist("idToken").then(res => {
         setMessage(res ? "Exists" : "Not exists");
         setError(null);
       }, err => {
@@ -79,7 +76,7 @@ function App(): React.JSX.Element {
   };
 
   const clear = () => {
-    RNSecureStorage.clear(options).then(res => {
+    RNSecureStorage.clear().then(res => {
         setMessage(res);
         setError(null);
       }, err => {
@@ -93,7 +90,7 @@ function App(): React.JSX.Element {
   const multiSet = () => {
     const items = {
       "multikey1": "multikey1 value",
-      "multikey2": "multikey2 value"
+      "multikey2": "multiksdfklhds,v xo4yrotrhukjsbngey2 value"
     };
 
 
@@ -124,7 +121,7 @@ function App(): React.JSX.Element {
   };
 
   const multiRemove = () => {
-    RNSecureStorage.multiRemove(["multikey1", "multikey2"], options).then(res => {
+    RNSecureStorage.multiRemove(["multikey1", "multikey2"]).then(res => {
         console.log(res);
         setMessage(res);
         setError(null);
