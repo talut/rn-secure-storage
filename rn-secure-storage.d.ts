@@ -1,5 +1,7 @@
-// Type definitions for rn-secure-storage 2.0.7
-// Project: https://github.com/talut/rn-secure-storage
+// Type definitions for rn-secure-storage 3.0.0
+// Project: https://github.com/akiver/rn-secure-storage
+// Definitions by: Talut TASGIRAN <https://github.com/talut>
+// TypeScript Version: 3.9.6
 
 declare module "rn-secure-storage" {
   export enum ACCESSIBLE {
@@ -42,8 +44,9 @@ declare module "rn-secure-storage" {
      * unlocked by the user.
      * Items with this attribute do not migrate to a new device.
      */
-    WHEN_UNLOCKED_THIS_DEVICE_ONLY = "AccessibleWhenUnlockedThisDeviceOnly"
+    WHEN_UNLOCKED_THIS_DEVICE_ONLY = "AccessibleWhenUnlockedThisDeviceOnly",
   }
+
 
   type SetOptions = {
     /**
@@ -51,32 +54,56 @@ declare module "rn-secure-storage" {
      * This indicates when a keychain item is accessible, see possible values in RNSecureStorage.ACCESSIBLE.
      * Default: ACCESSIBLE.WHEN_UNLOCKED
      */
-    accessible: ACCESSIBLE;
-  };
+    accessible?: ACCESSIBLE,
+  }
 
   const RNSecureStorage: RNSecureStorageStatic;
 
   export interface RNSecureStorageStatic {
     /**
+     * Set a value.
+     */
+    setItem(key: string, value: string, options: SetOptions): Promise<string | null>;
+
+    /**
      * Get a value from secure storage.
      */
-    get(key: string): Promise<string | null>;
+    getItem(key: string): Promise<string | null>;
+
     /**
      * Checks if a key has been set.
      */
-    exists(key: string): Promise<boolean | null>;
+    exist(key: string): Promise<boolean | null>;
+
     /**
-     * Set a value from secure storage.
+     * Get all setted keys from secure storage.
      */
-    set(
-      key: string,
-      value: string,
-      options: SetOptions
-    ): Promise<string | null>;
+    getAllKeys(): Promise<string[] | null>;
+
+    /**
+     * Multiple key pair set for secure storage
+     */
+    multiSet(pairs: { [key: string]: string }, options: SetOptions): Promise<string[] | null>;
+
+    /**
+     * Get multiple values from secure storage.
+     */
+    multiGet(keys: string[]): Promise<string[] | null>;
+
     /**
      * Remove a value from secure storage.
      */
-    remove(key: string): Promise<string | null>;
+    removeItem(key: string): Promise<string | null>;
+
+    /**
+     * Remove values from secure storage (On error will return unremoved keys)
+     */
+    multiRemove(keys: string[]): Promise<string | null>;
+
+    /**
+     * Removes whole RNSecureStorage data (On error will return unremoved keys)
+     */
+    clear(): Promise<string | null>;
   }
 
   export default RNSecureStorage;
