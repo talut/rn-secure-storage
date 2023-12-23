@@ -30,7 +30,7 @@ yarn add rn-secure-storage
 
 ### What's changed in v3.0.0
 
-- Rewritten Android module with enhanced security features. [I need your reviews](#ineedyourreviews)
+- Rewritten Android module with enhanced security features. 
 - Android minSdkVersion is now 23 (Android 6.0 Marshmallow)
 - iOS module redeveloped using Swift and updated APIs.
 - Comprehensive renaming and expansion of APIs.
