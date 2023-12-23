@@ -69,7 +69,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
             prefsStorage.storeEncryptedEntry(key, encryptedValue);
             promise.resolve("Stored successfully");
         } catch (Exception e) {
-            promise.reject(e);
+            promise.reject("RNSecureStorage: An error occurred during key store", e);
         }
     }
 
@@ -155,7 +155,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(String.valueOf(this.prefsStorage.getAllStoredKeys()));
         } catch (Exception e) {
-            promise.reject("thereAreNoKeys", "RNSecureStorage: There are no stored keys.");
+            promise.reject(Errors.NOT_FOUND, "RNSecureStorage: There are no stored keys.");
         }
     }
 
@@ -207,7 +207,7 @@ public class RNSecureStorageModule extends ReactContextBaseJavaModule {
         try {
             if (this.prefsStorage.clear()) {
                 if (this.prefsStorage.getAllStoredKeys().isNull(0)) {
-                    promise.resolve("All keys/values removed successfully");
+                    promise.resolve(true);
                 } else {
                     promise.resolve(String.valueOf(this.prefsStorage.getAllStoredKeys()));
                 }

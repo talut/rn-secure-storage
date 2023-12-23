@@ -101,11 +101,6 @@ declare module "rn-secure-storage" {
     multiRemove(keys: string[]): Promise<string | null>;
 
     /**
-     * Get supported biometry type (Will return FaceID, TouchID, Fingerprint, Iris, Face or undefined/null)
-     */
-    getSupportedBiometryType(): Promise<string | null>;
-
-    /**
      * Removes whole RNSecureStorage data (On error will return unremoved keys)
      */
     clear(): Promise<string | null>;

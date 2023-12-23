@@ -24,9 +24,9 @@ function App(): React.JSX.Element {
     RNSecureStorage.setItem("idToken", "sdoi34y5o34webfld,v sv", {
       accessible: ACCESSIBLE.WHEN_UNLOCKED
     }).then(res => {
-        setMessage(res);
-        setError(null);
-      }, err => {
+      setMessage(res);
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -35,9 +35,9 @@ function App(): React.JSX.Element {
 
   const getItem = () => {
     RNSecureStorage.getItem("idToken").then(res => {
-        setMessage(res);
-        setError(null);
-      }, err => {
+      setMessage(res);
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -46,9 +46,9 @@ function App(): React.JSX.Element {
 
   const removeItem = () => {
     RNSecureStorage.removeItem("idToken").then(res => {
-        setMessage(res);
-        setError(null);
-      }, err => {
+      setMessage(res);
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -57,9 +57,9 @@ function App(): React.JSX.Element {
 
   const getAllKeys = () => {
     RNSecureStorage.getAllKeys().then(res => {
-        if (res) setMessage(JSON.stringify(res));
-        setError(null);
-      }, err => {
+      if (res) setMessage(res.join(", "));
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -68,9 +68,9 @@ function App(): React.JSX.Element {
 
   const exist = () => {
     RNSecureStorage.exist("idToken").then(res => {
-        setMessage(res ? "Exists" : "Not exists");
-        setError(null);
-      }, err => {
+      setMessage(res ? "Exists" : "Not exists");
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -79,9 +79,9 @@ function App(): React.JSX.Element {
 
   const clear = () => {
     RNSecureStorage.clear().then(res => {
-        setMessage(res);
-        setError(null);
-      }, err => {
+      setMessage(res);
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -99,13 +99,9 @@ function App(): React.JSX.Element {
     RNSecureStorage.multiSet(items, {
       accessible: ACCESSIBLE.WHEN_UNLOCKED
     }).then(res => {
-        if (res) setMessage(JSON.stringify(res));
-        setError(null);
-      }, err => {
-        setError(err);
-        setMessage(null);
-      }
-    ).catch(err => {
+      if (res) setMessage(JSON.stringify(res));
+      setError(null);
+    }).catch(err => {
       setError(err);
       setMessage(null);
     });
@@ -113,9 +109,9 @@ function App(): React.JSX.Element {
 
   const multiGet = () => {
     RNSecureStorage.multiGet(["multikey1", "multikey2", "multikey3"]).then(res => {
-        if (res) setMessage(JSON.stringify(res));
-        setError(null);
-      }, err => {
+      if (res) setMessage(JSON.stringify(res));
+      setError(null);
+    }).catch(err => {
         setError(err);
         setMessage(null);
       }
@@ -123,32 +119,18 @@ function App(): React.JSX.Element {
   };
 
   const multiRemove = () => {
-    RNSecureStorage.multiRemove(["multikey1", "multikey2"]).then(res => {
+    RNSecureStorage.multiRemove(["multikey1", "multikey3"]).then(res => {
         console.log(res);
         setMessage(res);
         setError(null);
-      }, err => {
-        console.log("err", err);
-        setError(err);
-        setMessage(null);
       }
-    );
+    ).catch(err => {
+      console.log("err", err);
+      setError(err);
+      setMessage(null);
+    });
   };
 
-  const getSupportedBiometryType = () => {
-    RNSecureStorage.getSupportedBiometryType().then(res => {
-        if (res) {
-          setMessage(res);
-        } else {
-          setMessage("Not supported");
-        }
-        setError(null);
-      }, err => {
-        setError(err);
-        setMessage(null);
-      }
-    );
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -187,11 +169,6 @@ function App(): React.JSX.Element {
           <View style={styles.inputArea}>
             <Button onPress={multiRemove} title="Multiple key/value remove" />
           </View>
-
-          <View style={styles.inputArea}>
-            <Button onPress={getSupportedBiometryType} title="Get supported biometry types" />
-          </View>
-
 
           {message && <View style={[styles.inputArea, {
             width: "100%"

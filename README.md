@@ -2,17 +2,17 @@
 
 [![npm version](https://badge.fury.io/js/rn-secure-storage.svg)](https://badge.fury.io/js/rn-secure-storage)
 [![npm downloads](https://img.shields.io/npm/dm/rn-secure-storage.svg?maxAge=2592000)](https://img.shields.io/npm/dm/rn-secure-storage.svg?maxAge=2592000)
-[![npm](https://img.shields.io/npm/dt/rn-secure-storage.svg?maxAge=2592000)](https://img.shields.io/npm/dt/rn-secure-storage.svg?maxAge=2592000)
 ![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)
+
 Secure Storage for React Native (Android & iOS) - Keychain & Keystore
-
-### Thanks for using this library
-
-Please read my disclaimer about maintaining this library [here](#disclaimer)
 
 #### If you like this library, please consider supporting my work by buying me a coffee
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoff.ee/talut)
+
+### Thanks for using this library
+
+Please read my disclaimer about maintaining this library [here](#disclaimer)
 
 ## Getting Started
 
@@ -53,71 +53,125 @@ yarn add rn-secure-storage
 - [multiSet](#multiset)
 - [multiGet](#multiget)
 - [multiRemove](#multiremove)
-- [getSupportedBiometryType](#getsupportedbiometrytype)
 
 ### setItem
+
+To set the item, you need to pass the key and value as parameters. You can also pass the options as a third parameter. If the key exists,
+the value will be updated, otherwise, it will be created. You can use the `exists` method to check if the key exists. You can also pass
+the `accessible` option to set the accessibility of the keychain item (only for IOS).
 
 ```js
 import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 
-RNSecureStorage.setItem("key", "value", {accessible: ACCESSIBLE.WHEN_UNLOCKED})
+RNSecureStorage.setItem("key", "value", {accessible: ACCESSIBLE.WHEN_UNLOCKED}).then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### getItem
 
+To get the item, you need to pass the key as a parameter. If the key exists, the value will be returned, otherwise, it will return an error.
+
 ```js
-RNSecureStorage.getItem("key")
+RNSecureStorage.getItem("key").then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### removeItem
 
+To remove the item, you need to pass the key as a parameter. If the key exists, the value will be removed, otherwise, it will return an
+error.
+
 ```js
-RNSecureStorage.removeItem("key")
+RNSecureStorage.removeItem("key").then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### exists
 
+To check if the item exists, you need to pass the key as a parameter. If the key exists it will return `true`, otherwise, it will
+return `false`. Mostly you don't need to use this method because `getItem` will return an error if the key doesn't exist. But for
+performance you can just check if the key exists before calling `getItem`.
+
 ```js
-RNSecureStorage.exist("key")
+RNSecureStorage.exist("key").then((res) => {
+	console.log(res ? "exists" : "does not exist");
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### getAllKeys
 
+To get all keys, you need to call `getAllKeys` method. It will return an array of keys.
+
 ```js
-RNSecureStorage.getAllKeys()
+RNSecureStorage.getAllKeys().then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### clear
 
+To clear all data, you need to call `clear` method. It will return `true` if the operation is successful. Otherwise, it will return
+remaining keys.
+
 ```js
-RNSecureStorage.clear()
+RNSecureStorage.clear().then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### multiSet
+
+Multi set is a new feature that allows you to set multiple values simultaneously. You need to pass an object as the first parameter
 
 ```js
 import RNSecureStorage, {ACCESSIBLE} from 'rn-secure-storage';
 
 const items = {"key_1": "multi key 1", "key_2": "multi key 2"};
-RNSecureStorage.multiSet(items, {accessible: ACCESSIBLE.WHEN_UNLOCKED})
+RNSecureStorage.multiSet(items, {accessible: ACCESSIBLE.WHEN_UNLOCKED}).then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### multiGet
 
+With multi get you can fetch multiple values at once. You need to pass an array of keys as the first parameter.
+
 ```js
-RNSecureStorage.multiGet(["key_1", "key_2"])
+RNSecureStorage.multiGet(["key_1", "key_2"]).then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ### multiRemove
 
-```js
-RNSecureStorage.multiRemove(["key_1", "key_2"])
-```
-
-### getSupportedBiometryType
+With multi remove you can delete multiple values at once. You need to pass an array of keys as the first parameter. If your keys are
+removed/not found, it will return an array of keys that are not removed/found.
 
 ```js
-RNSecureStorage.getSupportedBiometryType()
+RNSecureStorage.multiRemove(["key_1", "key_2"]).then((res) => {
+	console.log(res);
+}).catch((err) => {
+	console.log(err);
+});
 ```
 
 ## Options

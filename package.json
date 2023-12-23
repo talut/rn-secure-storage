@@ -18,7 +18,9 @@
     "keychain",
     "secure-preferences",
     "token",
-    "react-token"
+    "react-token",
+    "multiple values",
+    "multiple keys"
   ],
   "author": "Talut TASGIRAN <hi@talut.dev> (https://talut.dev)",
   "license": "MIT",
