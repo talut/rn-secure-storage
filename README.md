@@ -13,6 +13,7 @@ Secure Storage for React Native (Android & iOS) - Keychain & Keystore
 ### Thanks for using this library
 
 Please read my disclaimer about maintaining this library [here](#disclaimer)
+For Android [I need your reviews](#i-need-your-reviews)
 
 ## Getting Started
 
@@ -30,7 +31,7 @@ yarn add rn-secure-storage
 
 ### What's changed in v3.0.0
 
-- Rewritten Android module with enhanced security features. 
+- Rewritten Android module with enhanced security features.
 - Android minSdkVersion is now 23 (Android 6.0 Marshmallow)
 - iOS module redeveloped using Swift and updated APIs.
 - Comprehensive renaming and expansion of APIs.
