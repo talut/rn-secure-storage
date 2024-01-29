@@ -88,7 +88,7 @@ declare module "rn-secure-storage" {
     /**
      * Get multiple values from secure storage.
      */
-    multiGet(keys: string[]): Promise<string[] | null>;
+    multiGet(keys: string[]): Promise<{[key: string]: string} | null>;
 
     /**
      * Remove a value from secure storage.
