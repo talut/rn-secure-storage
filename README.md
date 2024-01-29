@@ -30,6 +30,9 @@ npm install --save rn-secure-storage
 yarn add rn-secure-storage
 ```
 
+### What's changed in v3.0.1
+- Return type for multiGet changed. https://github.com/talut/rn-secure-storage/pull/79
+
 ### What's changed in v3.0.0
 
 - Rewritten Android module with enhanced security features.
