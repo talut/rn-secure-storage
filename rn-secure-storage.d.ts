@@ -76,7 +76,7 @@ declare module "rn-secure-storage" {
     exist(key: string): Promise<boolean | null>;
 
     /**
-     * Get all setted keys from secure storage.
+     * Get all keys from secure storage.
      */
     getAllKeys(): Promise<string[] | null>;
 
