@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
   s.authors      = package['author']
   s.homepage     = package['homepage']
-  s.platforms    = { :ios => "10.0", :tvos => "9.2", :osx => "10.14" }
+  s.platforms    = { :ios => "10.0", :tvos => "9.2", :osx => "10.14", :visionos => "1.0" }
 
   s.source       = { :git => "https://github.com/talut/rn-secure-storage.git", :tag => "v#{s.version}" }
   s.source_files  = "ios/**/*.{h,m,swift}"
