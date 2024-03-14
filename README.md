@@ -197,7 +197,58 @@ RNSecureStorage.multiRemove(["key_1", "key_2"]).then((res) => {
 | **`AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY`** | The data in the keychain item cannot be accessed after a restart until the device has been unlocked once by the user. Items with this attribute never migrate to a new device.         |
 | **`ALWAYS_THIS_DEVICE_ONLY`**             | The data in the keychain item can always be accessed regardless of whether the device is locked. Items with this attribute never migrate to a new device.                              |
 
-#### You can also check out sample project for more details
+#### You can also check out the sample project for more details
+
+## iOS `Keychain` persistence
+
+By default, the iOS Keychain items tied to your app are not cleared upon uninstall, as this is [the expected behaviour](https://developer.apple.com/forums/thread/36442?answerId=281900022#281900022). However, if you do want to change that, you can use the snippet below to clear those items upon your app's first launch.
+
+```objc
+// AppDelegate.mm
+
+/**
+ Deletes all Keychain items accessible by this app if this is the first time the user launches the app.
+ */
+static void ClearKeychainItemsUponFirstLaunch() {
+    // Checks whether or not this is the first time the app is run.
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HAS_RUN_BEFORE"] == NO) {
+        // Sets the appropriate value so we don't clear next time the app is launched.
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HAS_RUN_BEFORE"];
+
+        NSArray *secItemClasses = @[
+            (__bridge id)kSecClassGenericPassword,
+            (__bridge id)kSecClassInternetPassword,
+            (__bridge id)kSecClassCertificate,
+            (__bridge id)kSecClassKey,
+            (__bridge id)kSecClassIdentity
+        ];
+
+        // Maps through all Keychain classes and deletes all items that match.
+        for (id secItemClass in secItemClasses) {
+            NSDictionary *spec = @{(__bridge id)kSecClass: secItemClass};
+            SecItemDelete((__bridge CFDictionaryRef)spec);
+        }
+    }
+}
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    self.moduleName = @"MyRnApp";
+
+    self.initialProps = @{};
+
+    // Adds this line to call the new function from above.
+    ClearKeychainItemsUponFirstLaunch();
+
+    // ...
+}
+
+// ...
+
+@end
+```
 
 ## License
 
